@@ -1,4 +1,4 @@
-# Duke project template
+# ModTrack
 
 This is a project template for a greenfield Java project. It's named after the Java mascot _Duke_. Given below are instructions on how to use it.
 
@@ -14,14 +14,15 @@ Prerequisites: JDK 17 (use the exact version), update Intellij to the most recen
    > Task :processResources NO-SOURCE
    > Task :classes
    
-   > Task :Duke.main()
+   > Task :ModTrack.main()
    Hello from
-    ____        _        
-   |  _ \ _   _| | _____ 
-   | | | | | | | |/ / _ \
-   | |_| | |_| |   <  __/
-   |____/ \__,_|_|\_\___|
-   
+     __  __           _ _______             _     
+    |  \/  |         | |__   __|           | |    
+    | \  / | ___   __| |  | |_ __ __ _  ___| | __ 
+    | |\/| |/ _ \ / _` |  | | '__/ _` |/ __| |/ / 
+    | |  | | (_) | (_| |  | | | | (_| | (__|   <  
+    |_|  |_|\___/ \__,_|  |_|_|  \__,_|\___|_|\_\ 
+
    What is your name?
    ```
    Type some word and press enter to let the execution proceed to the end.
