@@ -6,6 +6,13 @@ public class AddCommand extends Command{
     private int semester;
     private int modCredits;
 
+    public AddCommand(String name, int year, int semester, int credits) {
+        this.modName = name;
+        this.year = year;
+        this.semester = semester;
+        this.modCredits = credits;
+    }
+
     public void printAddMessage(ArrayList<Mod> list, Mod mod) {
         System.out.println("----------------------------------------------------");
         System.out.println("Module added:\n");
