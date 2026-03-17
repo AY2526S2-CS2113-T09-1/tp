@@ -45,4 +45,10 @@ public class Mod {
         modString += "Modular Credits: " + this.modCredits + "\n";
         return modString;
     }
+
+    public String toFileFormat() {
+        String line;
+        line = (isComplete ? "1 | " : "0 | ") + modName + " | " + year + " | " + semester + modCredits;
+        return line;
+    }
 }
