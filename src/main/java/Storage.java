@@ -55,7 +55,7 @@ public class Storage {
             semester = words[3].trim();
             credits = words[4].trim();
 
-            newMod = new Mod(name, year, semester, credits);
+            newMod = new Mod(name, Integer.parseInt(year), Integer.parseInt(semester), Integer.parseInt(credits));
 
             if (status.equals("1") && newMod != null) {
                 newMod.setToDone();
