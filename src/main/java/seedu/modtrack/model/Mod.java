@@ -53,8 +53,10 @@ public class Mod {
     }
 
     public String toFileFormat() {
-        String line;
-        line = (isComplete ? "1 | " : "0 | ") + modName + " | " + year + " | " + semester + modCredits;
-        return line;
+        return (isComplete ? "1 | " : "0 | ")
+                + modName + " | "
+                + year + " | "
+                + semester + " | "
+                + modCredits;
     }
 }

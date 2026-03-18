@@ -26,8 +26,22 @@ public class AddCommand extends Command {
 
     @Override
     public void execute(ArrayList<Mod> list) {
+        for (Mod existingMod : list) {
+            if (existingMod.getModName().equalsIgnoreCase(modName)) {
+                System.out.println("----------------------------------------------------");
+                if (!existingMod.getIsComplete()) {
+                    System.out.println("This module already exists in the list, but is currently incomplete.");
+                    System.out.println("To mark this module as complete, please type in command: 'mark n/"
+                            + existingMod.getModName() + "'");
+                } else {
+                    System.out.println("This module is already in the list!");
+                }
+                System.out.println("----------------------------------------------------");
+                return;
+            }
+        }
+
         Mod mod = new Mod(modName, year, semester, modCredits);
-        mod.setToDone();
         list.add(mod);
         printAddMessage(list, mod);
     }
