@@ -2,6 +2,8 @@ package seedu.modtrack.ui;
 
 import java.util.ArrayList;
 
+import seedu.modtrack.model.Mod;
+
 public class Ui {
 
     public void showOpeningText() {
@@ -47,19 +49,26 @@ public class Ui {
         System.out.println("Completed Modules:");
         // for completed modules
         for (Mod task : taskList) {
-            if (task.getisComplete == true) {
+            if (task.getIsComplete()) {
                 System.out.println("✔ " + task.getModName() + "(" + task.getSemester() + ")"
                         + " - " + task.getModCredits() + "MCs");
             }
         }
+        System.out.println("\nRemaining Reference Modules:");
         for (Mod module : fullModuleList) {
+            boolean alreadyAdded = false;
+
+            // Check if this reference module is already in the user's taskList
             for (Mod task : taskList) {
-                if (module.getModName() == task.getModName()) {
+                if (module.getModName().equals(task.getModName())) {
+                    alreadyAdded = true;
                     break;
-                }else{
-                    System.out.println("✘ " + module.getModName() + "(" + module.getSemester() + ")"
-                            + " - " + module.getModCredits() + "MCs");
                 }
+            }
+
+            // Only print "✘" if it was NOT found in the taskList
+            if (!alreadyAdded) {
+                System.out.println("✘ " + module.getModName() + " (" + module.getSemester() + ") - " + module.getModCredits() + "MCs");
             }
         }
     }
