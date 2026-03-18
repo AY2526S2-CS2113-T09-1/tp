@@ -17,3 +17,4 @@ bin/
 text-ui-test/EXPECTED-UNIX.TXT
 
 # Storage for test cases
+/data/*.txt
