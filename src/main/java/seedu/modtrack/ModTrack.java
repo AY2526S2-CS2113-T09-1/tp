@@ -32,10 +32,14 @@ public class ModTrack {
         Boolean isRunning = true;
 
         this.ui.showOpeningText();
+        // interim testing
         AddCommand commandtest = new AddCommand("CS2113",1,1,4);
         commandtest.execute(taskList);
 
         this.ui.showList(taskList,referenceList.list);
+        this.ui.showGradReq();
+        //testing code end
+
         while (isRunning) {
 
             String instruction = in.nextLine();

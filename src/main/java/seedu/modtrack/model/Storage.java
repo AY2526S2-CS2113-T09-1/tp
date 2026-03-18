@@ -1,11 +1,9 @@
+package seedu.modtrack.model;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
-
-import seedu.modtrack.model.Mod;
 
 public class Storage {
     private static final String FILE_PATH = "./data/ModTrack.txt";
