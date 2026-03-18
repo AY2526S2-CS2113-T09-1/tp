@@ -27,7 +27,7 @@ public class ModTrack {
         this.storage = new Storage();
 
         this.referenceList.populateReferenceList(this.referenceList.list);
-        this.taskList = storage.load();
+        this.taskList = this.storage.load();
     }
 
     public void run() {
@@ -40,10 +40,10 @@ public class ModTrack {
             String instruction = in.nextLine();
 
             try {
-                Command command = parser.parse(instruction);
+                Command command = this.parser.parse(instruction);
                 command.execute(this.taskList);
 
-                storage.save(this.taskList);
+                this.storage.save(this.taskList);
 
                 if (command.isExit()) {
                     isRunning = false;
