@@ -1,1 +1,9 @@
+add n/CS1010 y/YEAR1 s/SEM1
+add n/CS2113 y/YEAR2 s/SEM2
+mark n/CS2113
+delete n/CS1010
+list
+unmark n/CS2113
+list
+show grad req
 bye
