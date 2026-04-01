@@ -47,5 +47,4 @@ public class ListCompareCommand extends Command {
         }
         System.out.println("____________________________________________________________");
     }
-
 }
