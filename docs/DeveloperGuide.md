@@ -48,7 +48,21 @@ java -jar tp.jar
 {list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
 
 ## Design
+**ModTrack** (Modtrack.java) launches the application and shuts it down when the exit command is called:
+- At program start: It calls
+
 ### UI Component
+
+The UI component is responsible for handling interactions between the user and the system. In **ModTrack**, the UI is implemented as a Command Line Interface (CLI).
+
+The UI reads user input from standard input and displays output to standard output. It delegates the processing of user commands to the `Parser` component.
+
+The main responsibilities of the UI component are:
+- Reading user input
+- Displaying responses from commands
+- Handling application start-up and shutdown messages
+
+The UI does not contain any business logic, adhering to separation of concerns.
 
 ### Command Component
 The Command mechanism is facilitated by the abstract `Command` class. It serves as the base for all executable actions within **ModTrack**, allowing the `Parser` to delegate logic to specific command objects.
@@ -86,7 +100,39 @@ public abstract class Command {
 
 ### Storage Component
 
+The Storage component is responsible for persisting module data to the local file system.
+
+It handles:
+- Saving module data to a file
+- Loading module data when the application starts
+
+The data is stored in a text-based format, allowing easy readability and debugging.
+
+When the application starts:
+1. Storage reads data from the file
+2. Parses it into `Mod` objects
+3. Loads them into the in-memory list
+
+When changes occur (e.g., add/delete):
+1. The updated list is written back to the file
+
+This ensures data persistence across sessions.
+
 ### Parser Component
+
+The Parser component is responsible for interpreting user input and converting it into executable commands.
+
+It performs the following steps:
+1. Reads raw user input
+2. Identifies the command keyword (e.g., `add`, `delete`, `list`)
+3. Extracts relevant arguments
+4. Constructs the corresponding `Command` object
+
+For example:
+- Input: `add n/CS2113 y/Y2 s/S1`
+- Output: `AddCommand` object with parsed parameters
+
+The Parser ensures that invalid inputs are handled gracefully by throwing appropriate exceptions.
 
 
 {Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
@@ -105,7 +151,85 @@ public abstract class Command {
 
 ### Ang Lee's enhancements
 #### 6. Exit Feature
+
+The exit mechanism is facilitated by the `ExitCommand` class.
+
+**How it works:**
+- When executed, the application terminates gracefully
+- Any pending data is saved before exit
+
+**Example:**
+```
+exit
+```
+##### Sequence Diagram
+
+```plantuml
+@startuml
+actor User
+participant UI
+participant Parser
+participant ExitCommand
+participant Storage
+
+User -> UI : enter "exit"
+UI -> Parser : parse(input)
+Parser -> ExitCommand : create command
+ExitCommand -> ExitCommand : execute()
+
+alt Unsaved changes exist
+    ExitCommand -> Storage : save(data)
+    Storage --> ExitCommand : success
+end
+
+ExitCommand --> UI : termination signal
+UI --> User : display goodbye message
+@enduml
+```
+The sequence diagram above shows how the exit command is handled:
+1. The user enters the `exit` command
+2. The input is parsed into an `ExitCommand`
+3. The command executes and checks for unsaved data
+4. If necessary, data is saved via the Storage component
+5. The system terminates gracefully and displays a farewell message
+
 #### 7. Show Graduation Requirement Feature
+This feature displays the graduation requirements tracked by the system.
+
+**How it works:**
+- Retrieves stored module data
+- Compares against graduation criteria
+- Displays remaining requirements to the user
+
+**Example:**
+```
+show grad req
+```
+#### Sequence Diagram
+
+```plantuml
+@startuml
+actor User
+participant UI
+participant Parser
+participant GradCommand
+participant ModList
+
+User -> UI : enter "grad"
+UI -> Parser : parse(input)
+Parser -> GradCommand : create command
+GradCommand -> ModList : retrieve modules
+GradCommand -> GradCommand : compute requirements
+GradCommand --> UI : formatted result
+UI --> User : display remaining requirements
+@enduml
+```
+The sequence diagram illustrates how graduation requirements are displayed:
+1. The user enters the `grad` command
+2. The Parser creates a `GradCommand`
+3. The command retrieves all modules from the list
+4. It computes completed and remaining requirements
+5. The results are formatted and displayed to the user
 
 ## Product scope
 ### Target user profile
@@ -135,11 +259,17 @@ This application provides:
 
 ## Non-Functional Requirements
 
-{Give non-functional requirements}
+1. The application should run on any system with Java installed
+2. The application should respond within 1 second for typical commands
+3. Data should be persisted across sessions
+4. The system should handle invalid input gracefully
+5. The application should be usable entirely via CLI
 
 ## Glossary
 
-* *glossary item* - Definition
+* *Module* - A course taken by a student
+* *Command* - An executable instruction entered by the user
+* *Parser* - Component that interprets user input
 
 ## Instructions for manual testing
 
