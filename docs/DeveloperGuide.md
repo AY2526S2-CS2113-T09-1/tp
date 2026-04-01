@@ -1,5 +1,10 @@
 # CS2113 T09-1 tp Developer Guide
 
+## Acknowledgements
+
+* **AddressBook-Level 3 (AB3):** The architectural design, Developer Guide structure, and certain Command pattern implementations were adapted from the [AddressBook-Level 3 project](https://se-education.org/addressbook-level3/) created by the SE-EDU initiative.
+* **Individual Projects (iP):** The core CLI parsing logic and the task-handling structures were adapted from the team members' individual projects which served as a foundation for the Command and Parser classes in ModTrack.
+
 ## Table of Contents
 1. [Setup Guide](#setup-guide)
 
@@ -47,48 +52,22 @@ java -jar tp.jar
 
 {list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
 
-## Design & implementation
+## Design
+**ModTrack** (Modtrack.java) launches the application and shuts it down when the exit command is called:
+- At program start: It calls
 
-{Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
-### Design 
+### UI Component
 
-** architecture diagram **
+The UI component is responsible for handling interactions between the user and the system. In **ModTrack**, the UI is implemented as a Command Line Interface (CLI).
 
-### Main components of the architecture 
-`ModTrack` class is the main class 
+The UI reads user input from standard input and displays output to standard output. It delegates the processing of user commands to the `Parser` component.
 
-The Program has 4 main components: 
+The main responsibilities of the UI component are:
+- Reading user input
+- Displaying responses from commands
+- Handling application start-up and shutdown messages
 
-`UI`: The user interface - reads raw user input and displays formatted output back to the command line terminal 
-
-`Parser`: Interprets the commands - handles command extractions by breaking down user input based on the relevant flags 
-eg.( n/, y/) to translate raw user input into executable command objects
-
-`Command`: Executes the respective commands 
-
-`Storage`: Manages file I/O operations to enable list storage. 
-
-### Component interactions 
-
-** Architecture sequence diagrams ** 
-
-### UI Class
-
-The UI class serves as the exclusive interface for human-computer interaction, 
-responsible for capturing user input and displaying formatted output while keeping the program's core logic separate 
-from the presentation.
-
-It has the following key operations:
-showOpeningText()
-showClosingText()
-
-
-### Parser Class 
-
-### Command Class 
-
-### Storage Clas
-
+The UI does not contain any business logic, adhering to separation of concerns.
 
 ### Command Component
 The Command mechanism is facilitated by the abstract `Command` class. It serves as the base for all executable actions within **ModTrack**, allowing the `Parser` to delegate logic to specific command objects.
@@ -96,9 +75,6 @@ The Command mechanism is facilitated by the abstract `Command` class. It serves 
 The abstract `Command` class defines a core method: `execute(ArrayList<Mod> list)`. Concrete subclasses implement this method to perform specific operations on the module list.
 
 While the system includes several commands (such as `MarkCommand`, `ListCommand`, and `ExitCommand`), the following classes represent the primary data-manipulation logic:
-
-* **`AddCommand`**: Stores details for a new module (`name`, `year`, `semester`, `credits`). Its `execute` method performs a duplicate check before adding a new `Mod` object to the list.
-* **`DeleteCommand`**: Stores a `modName` string. Its `execute` method iterates through the list to find and remove the matching module.
 
 **Code Snippet: Abstract Command Structure**
 ```java
@@ -108,9 +84,6 @@ public abstract class Command {
     public boolean isExit() { return this.isExit; }
 }
 ```
-
-
-
 #### Design Considerations
 
 **Aspect: How commands interact with the module list**
@@ -129,7 +102,31 @@ public abstract class Command {
 
 ### Storage Component
 
+**API:** `Storage.java`
+
+![img_3.png](img_3.png)
+
+The `Storage` component,
+
+* can save and load module tracking data in a pipe-delimited text format, and read them back into corresponding `Mod` objects.
+* handles the initialization of the local data directory and file (`./data/ModTrack.txt`) automatically upon startup.
+* depends on classes in the `Model` component (because the `Storage` component's job is to save/retrieve `Mod` objects that belong to the `Model`).
+
 ### Parser Component
+
+The Parser component is responsible for interpreting user input and converting it into executable commands.
+
+It performs the following steps:
+1. Reads raw user input
+2. Identifies the command keyword (e.g., `add`, `delete`, `list`)
+3. Extracts relevant arguments
+4. Constructs the corresponding `Command` object
+
+For example:
+- Input: `add n/CS2113 y/Y2 s/S1`
+- Output: `AddCommand` object with parsed parameters
+
+The Parser ensures that invalid inputs are handled gracefully by throwing appropriate exceptions.
 
 
 {Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
@@ -137,7 +134,14 @@ public abstract class Command {
 ## Implementation
 ### Haofu's enhancements
 #### 1. Add Feature
+* **`AddCommand`**: Stores details for a new module (`name`, `year`, `semester`, `credits`). Its `execute` method performs a duplicate check before adding a new `Mod` object to the list.
+  The following sequence diagram shows how an add operation goes through the `Logic` component:
+  ![img_1.png](img_1.png)
+
 #### 2. Delete Feature
+* **`DeleteCommand`**: Stores a `modName` string. Its `execute` method iterates through the list to find and remove the matching module.
+  The following sequence diagram shows how a delete operation goes through the `Logic` component:
+  ![img_2.png](img_2.png)
 
 ### Yang Han's enhancements
 #### List Feature
@@ -172,8 +176,6 @@ Design Considerations:
 
 `List c/` command Sequence Diagram 
 ![img_1.png](img_1.png)
-Examples:
-`List` `List c/`
 
 ### Christina's enchancements
 #### 4. Mark Feature
@@ -181,7 +183,48 @@ Examples:
 
 ### Ang Lee's enhancements
 #### 6. Exit Feature
+
+The exit mechanism is facilitated by the `ExitCommand` class.
+
+**How it works:**
+- When executed, the application terminates gracefully
+- Any pending data is saved before exit
+
+**Example:**
+```
+exit
+```
+##### Sequence Diagram
+
+![img_4.png](img_4.png)
+The sequence diagram above shows how the exit command is handled:
+1. The user enters the `exit` command
+2. The input is parsed into an `ExitCommand`
+3. The command executes and checks for unsaved data
+4. If necessary, data is saved via the Storage component
+5. The system terminates gracefully and displays a farewell message
+
 #### 7. Show Graduation Requirement Feature
+This feature displays the graduation requirements tracked by the system.
+
+**How it works:**
+- Retrieves stored module data
+- Compares against graduation criteria
+- Displays remaining requirements to the user
+
+**Example:**
+```
+show grad req
+```
+#### Sequence Diagram
+
+![img_5.png](img_5.png)
+The sequence diagram illustrates how graduation requirements are displayed:
+1. The user enters the `grad` command
+2. The Parser creates a `GradCommand`
+3. The command retrieves all modules from the list
+4. It computes completed and remaining requirements
+5. The results are formatted and displayed to the user
 
 ## Product scope
 ### Target user profile
@@ -211,11 +254,17 @@ This application provides:
 
 ## Non-Functional Requirements
 
-{Give non-functional requirements}
+1. The application should run on any system with Java installed
+2. The application should respond within 1 second for typical commands
+3. Data should be persisted across sessions
+4. The system should handle invalid input gracefully
+5. The application should be usable entirely via CLI
 
 ## Glossary
 
-* *glossary item* - Definition
+* *Module* - A course taken by a student
+* *Command* - An executable instruction entered by the user
+* *Parser* - Component that interprets user input
 
 ## Instructions for manual testing
 
