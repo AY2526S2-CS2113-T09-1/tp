@@ -134,14 +134,29 @@ The Parser ensures that invalid inputs are handled gracefully by throwing approp
 ## Implementation
 ### Haofu's enhancements
 #### 1. Add Feature
-* **`AddCommand`**: Stores details for a new module (`name`, `year`, `semester`, `credits`). Its `execute` method performs a duplicate check before adding a new `Mod` object to the list.
-  The following sequence diagram shows how an add operation goes through the `Logic` component:
-  ![img_1.png](img_1.png)
+The **`AddCommand`** facilitates the addition of new modules to the application by storing details such as `name`, `year`, `semester`, and `credits`.
+
+**Implementation**
+
+The addition mechanism is facilitated by `VersionedAddressBook`. When a user executes the `AddCommand`, the `execute` method first performs a duplicate check. If the module is unique, it is added to the list. The `AddCommand` then calls `Model#commitAddressBook()`, causing the modified state of the address book after the addition to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+
+> [!NOTE]
+> If the command fails its execution (e.g., a duplicate module is found), it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
+
+The following sequence diagram shows how an add operation goes through the `Logic` component:
+![img_6.png](img_6.png)
+
+---
 
 #### 2. Delete Feature
-* **`DeleteCommand`**: Stores a `modName` string. Its `execute` method iterates through the list to find and remove the matching module.
-  The following sequence diagram shows how a delete operation goes through the `Logic` component:
-  ![img_2.png](img_2.png)
+The **`DeleteCommand`** allows for the removal of a module from the list using a `modName` string.
+
+**Implementation**
+
+The deletion mechanism is also facilitated by `VersionedAddressBook`. Upon execution, the `DeleteCommand` iterates through the list to find the matching module. If a match is found and removed, the command calls `Model#commitAddressBook()`. This causes the modified state of the address book—now excluding the deleted module—to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+
+The following sequence diagram shows how a delete operation goes through the `Logic` component:
+![img_7.png](img_7.png)
 
 ### Yang Han's enhancements
 #### List Feature
@@ -172,10 +187,10 @@ Design Considerations:
 
 #### Sequence Diagram
 `List` command Sequence Diagram
-![img_2.png](img_2.png)
+![img_2.png](list2.png)
 
 `List c/` command Sequence Diagram 
-![img_1.png](img_1.png)
+![img_1.png](list1.png)
 
 ### Christina's enchancements
 #### 4. Mark Feature
@@ -250,7 +265,16 @@ This application provides:
 |Version| As a ... | I want to ... | So that I can ...|
 |--------|----------|---------------|------------------|
 |v1.0|new user|see usage instructions|refer to them when I forget how to use the application|
-|v2.0|user|find a to-do item by name|locate a to-do without having to go through the entire list|
+|v1.0|user|add a module with its module code and title|record modules I have taken|
+|v1.0|user|delete a module entry|remove modules I added by mistake|
+|v1.0|user|mark a module as completed|track my academic progress|
+|v1.0|user|view all completed modules|know what I have fulfilled|
+|v1.0|user|view all uncompleted required modules|plan future semesters|
+|v1.0|user|view the total modular credits earned|track my graduation progress|
+|v1.0|user|view the remaining modular credits required|plan my remaining semesters|
+|v1.0|user|compare my completed modules with graduation requirements|see unmet requirement|
+|v1.0|user|assign a module to a specific semester|track when I took it|
+
 
 ## Non-Functional Requirements
 
