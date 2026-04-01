@@ -10,6 +10,7 @@ import seedu.modtrack.model.ExitCommand;
 import seedu.modtrack.model.ExemptCommand;
 import seedu.modtrack.model.FindCommand;
 import seedu.modtrack.model.ListCommand;
+import seedu.modtrack.model.ListCompareCommand;
 import seedu.modtrack.model.MarkCommand;
 import seedu.modtrack.model.SetProgressCommand;
 import seedu.modtrack.model.ShowGradReqCommand;
@@ -50,7 +51,7 @@ public class Parser {
         case "prereq":
             return parsePrereq(arguments);
         case "list":
-            return new ListCommand();
+            return parseList(arguments);
         case "show":
             return parseShow(arguments);
         case "exit":
@@ -147,6 +148,17 @@ public class Parser {
         }
 
         throw new InvalidCommandException("Unknown prereq command.");
+    }
+
+    private Command parseList(String arguments) throws InvalidCommandException {
+        String trimmedArgs = arguments.trim();
+        if(trimmedArgs.contains("c/")){
+            return new ListCompareCommand();
+        }
+        if(trimmedArgs.isEmpty()){
+            return new ListCommand();
+        }
+        throw new InvalidCommandException("Unknown list command.");
     }
 
     private Command parseShow(String arguments) throws InvalidCommandException {
