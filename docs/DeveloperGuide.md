@@ -51,34 +51,7 @@ java -jar tp.jar
 ### UI Component
 
 ### Command Component
-
-### Storage Component
-
-### Parser Component
-
-
-{Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
-
-## Implementation
-### Haofu's enhancements
-#### 1. Add Feature
-#### 2. Delete Feature
-
-### Yang Han's enchancement
-#### 3. List Feature
-
-### Christina's enchancements
-#### 4. Mark Feature
-#### 5. Unmark Feature
-
-### Ang Lee's enhancements
-#### 6. Exit Feature
-#### 7. Show Graduation Requirement Feature
-### Command Mechanism
-
 The Command mechanism is facilitated by the abstract `Command` class. It serves as the base for all executable actions within **ModTrack**, allowing the `Parser` to delegate logic to specific command objects.
-
-#### Implementation
 
 The abstract `Command` class defines a core method: `execute(ArrayList<Mod> list)`. Concrete subclasses implement this method to perform specific operations on the module list.
 
@@ -110,6 +83,29 @@ public abstract class Command {
 
 * **Approach:** Concrete commands handle their own internal validation. For instance, `AddCommand` prevents duplicate entries by checking the existing list, while `DeleteCommand` provides feedback if a module is not found.
 * **Reasoning:** This ensures that the "business rules" for a specific action are contained within the class responsible for that action, leading to high functional cohesion.
+
+### Storage Component
+
+### Parser Component
+
+
+{Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
+
+## Implementation
+### Haofu's enhancements
+#### 1. Add Feature
+#### 2. Delete Feature
+
+### Yang Han's enchancement
+#### 3. List Feature
+
+### Christina's enchancements
+#### 4. Mark Feature
+#### 5. Unmark Feature
+
+### Ang Lee's enhancements
+#### 6. Exit Feature
+#### 7. Show Graduation Requirement Feature
 
 ## Product scope
 ### Target user profile
