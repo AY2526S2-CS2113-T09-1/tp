@@ -1,5 +1,10 @@
 # CS2113 T09-1 tp Developer Guide
 
+## Acknowledgements
+
+* **AddressBook-Level 3 (AB3):** The architectural design, Developer Guide structure, and certain Command pattern implementations were adapted from the [AddressBook-Level 3 project](https://se-education.org/addressbook-level3/) created by the SE-EDU initiative.
+* **Individual Projects (iP):** The core CLI parsing logic and the task-handling structures were adapted from the team members' individual projects which served as a foundation for the Command and Parser classes in ModTrack.
+
 ## Table of Contents
 1. [Setup Guide](#setup-guide)
 
@@ -71,9 +76,6 @@ The abstract `Command` class defines a core method: `execute(ArrayList<Mod> list
 
 While the system includes several commands (such as `MarkCommand`, `ListCommand`, and `ExitCommand`), the following classes represent the primary data-manipulation logic:
 
-* **`AddCommand`**: Stores details for a new module (`name`, `year`, `semester`, `credits`). Its `execute` method performs a duplicate check before adding a new `Mod` object to the list.
-* **`DeleteCommand`**: Stores a `modName` string. Its `execute` method iterates through the list to find and remove the matching module.
-
 **Code Snippet: Abstract Command Structure**
 ```java
 public abstract class Command {
@@ -82,6 +84,7 @@ public abstract class Command {
     public boolean isExit() { return this.isExit; }
 }
 ```
+
 #### Design Considerations
 
 **Aspect: How commands interact with the module list**
@@ -100,23 +103,15 @@ public abstract class Command {
 
 ### Storage Component
 
-The Storage component is responsible for persisting module data to the local file system.
+**API:** `Storage.java`
 
-It handles:
-- Saving module data to a file
-- Loading module data when the application starts
+![img_3.png](img_3.png)
 
-The data is stored in a text-based format, allowing easy readability and debugging.
+The `Storage` component,
 
-When the application starts:
-1. Storage reads data from the file
-2. Parses it into `Mod` objects
-3. Loads them into the in-memory list
-
-When changes occur (e.g., add/delete):
-1. The updated list is written back to the file
-
-This ensures data persistence across sessions.
+* can save and load module tracking data in a pipe-delimited text format, and read them back into corresponding `Mod` objects.
+* handles the initialization of the local data directory and file (`./data/ModTrack.txt`) automatically upon startup.
+* depends on classes in the `Model` component (because the `Storage` component's job is to save/retrieve `Mod` objects that belong to the `Model`).
 
 ### Parser Component
 
@@ -140,7 +135,14 @@ The Parser ensures that invalid inputs are handled gracefully by throwing approp
 ## Implementation
 ### Haofu's enhancements
 #### 1. Add Feature
+* **`AddCommand`**: Stores details for a new module (`name`, `year`, `semester`, `credits`). Its `execute` method performs a duplicate check before adding a new `Mod` object to the list.
+  The following sequence diagram shows how an add operation goes through the `Logic` component:
+  ![img_1.png](img_1.png)
+
 #### 2. Delete Feature
+* **`DeleteCommand`**: Stores a `modName` string. Its `execute` method iterates through the list to find and remove the matching module.
+  The following sequence diagram shows how a delete operation goes through the `Logic` component:
+  ![img_2.png](img_2.png)
 
 ### Yang Han's enchancement
 #### 3. List Feature
