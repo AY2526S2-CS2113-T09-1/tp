@@ -47,8 +47,48 @@ java -jar tp.jar
 
 {list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
 
-## Design
-### UI Component
+## Design & implementation
+
+{Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
+### Design 
+
+** architecture diagram **
+
+### Main components of the architecture 
+`ModTrack` class is the main class 
+
+The Program has 4 main components: 
+
+`UI`: The user interface - reads raw user input and displays formatted output back to the command line terminal 
+
+`Parser`: Interprets the commands - handles command extractions by breaking down user input based on the relevant flags 
+eg.( n/, y/) to translate raw user input into executable command objects
+
+`Command`: Executes the respective commands 
+
+`Storage`: Manages file I/O operations to enable list storage. 
+
+### Component interactions 
+
+** Architecture sequence diagrams ** 
+
+### UI Class
+
+The UI class serves as the exclusive interface for human-computer interaction, 
+responsible for capturing user input and displaying formatted output while keeping the program's core logic separate 
+from the presentation.
+
+It has the following key operations:
+showOpeningText()
+showClosingText()
+
+
+### Parser Class 
+
+### Command Class 
+
+### Storage Clas
+
 
 ### Command Component
 The Command mechanism is facilitated by the abstract `Command` class. It serves as the base for all executable actions within **ModTrack**, allowing the `Parser` to delegate logic to specific command objects.
@@ -68,6 +108,9 @@ public abstract class Command {
     public boolean isExit() { return this.isExit; }
 }
 ```
+
+
+
 #### Design Considerations
 
 **Aspect: How commands interact with the module list**
@@ -96,8 +139,41 @@ public abstract class Command {
 #### 1. Add Feature
 #### 2. Delete Feature
 
-### Yang Han's enchancement
-#### 3. List Feature
+### Yang Han's enhancements
+#### List Feature
+
+User inputs `List` `List c/`
+
+The List feature is executed by the `ListCommand.java` (`List`) or the `ListCompareCommand. java` (`List c/`) class.
+It extends from the abstract class `Command` and overrides the `execute()` method.
+
+V1.0 Current implementation:
+The `execute()` method in the `ListCommand` class iterates through the list of modules tracked by the program and prints out
+all modules currently tracked using the `toString()` method of the mod class.
+
+V2.0 implementation:
+The `execute()` method in the `ListCompareCommand` class iterates through the list of modules tracked by the program
+and compares it to a predefined list of all modules required to be completed by a computer engineering student. prints
+output completed and uncompleted modules in 2 separate lists using the `toString()` method of the mod class.
+
+Design Considerations:
+* The list feature is implemented this way because we want to allow the user the ability to view their modules tracked
+  as is or against the modules required to graduate.
+* Under `ListCompareCommand` we compare the list of modules tracked to a predefined list, populated on start up
+  to allow easy updates when there is a change in graduation requirements or for scaling the program to other majors.
+* Two separate classes was chosen as we wanted to a streamlined command class where each command overrides the execute
+  method in their respective command classes.
+* Alternatives considered: Using a single command class and separating the executions by methods within the class.
+  This was rejected as it will cause list to have a different structure from the other command classes causing confusion.
+
+#### Sequence Diagram
+`List` command Sequence Diagram
+![img_2.png](img_2.png)
+
+`List c/` command Sequence Diagram 
+![img_1.png](img_1.png)
+Examples:
+`List` `List c/`
 
 ### Christina's enchancements
 #### 4. Mark Feature
