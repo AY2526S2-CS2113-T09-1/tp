@@ -24,10 +24,15 @@ public class Storage {
                 folder.mkdir();
             }
 
+            assert folder.exists() : "Failed to create directory";
+
             File file = new File(FILE_PATH);
             if (!file.exists()) {
                 file.createNewFile();
             }
+
+            assert file.exists() : "Failed to create file";
+
         } catch (IOException e) {
             System.out.println("Error creating storage: " + e.getMessage());
         }
@@ -109,6 +114,12 @@ public class Storage {
         int credits = Integer.parseInt(parts[4]);
         String completionType = parts[5];
         String prereqText = parts[6];
+
+        assert year > 0 : "Year must be positive";
+        assert semester == 1 || semester == 2 : "Invalid semester";
+        assert credits > 0 : "Credits must be positive";
+        assert completionType != null : "Completion type cannot be null";
+        assert prereqText != null : "Prerequisite text cannot be null";
 
         Mod mod = new Mod(name, year, semester, credits);
 
