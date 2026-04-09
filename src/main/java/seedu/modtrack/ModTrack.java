@@ -8,7 +8,7 @@ import seedu.modtrack.model.Command;
 import seedu.modtrack.parser.InvalidCommandException;
 import seedu.modtrack.model.Mod;
 import seedu.modtrack.model.ReferenceList;
-import seedu.modtrack.model.Storage;
+import seedu.modtrack.storage.Storage;
 import seedu.modtrack.parser.Parser;
 import seedu.modtrack.ui.Ui;
 
