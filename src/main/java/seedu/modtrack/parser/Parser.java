@@ -175,6 +175,9 @@ public class Parser {
         }
 
         start += prefix.length();
+        assert start >= prefix.length() && start <= input.length()
+                : "Invalid start index after prefix extraction";
+
         int nextPrefixIndex = input.length();
 
         String[] prefixes = {"n/", "y/", "s/", "t/", "p/"};
@@ -187,6 +190,9 @@ public class Parser {
                 nextPrefixIndex = index;
             }
         }
+
+        assert nextPrefixIndex >= start && nextPrefixIndex <= input.length()
+                : "Invalid next prefix index while extracting value";
 
         String value = input.substring(start, nextPrefixIndex).trim();
         if (value.isEmpty()) {
