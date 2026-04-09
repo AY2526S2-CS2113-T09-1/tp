@@ -1,5 +1,7 @@
-package seedu.modtrack.model;
+package seedu.modtrack.commands;
 
+import seedu.modtrack.referencelist.ReferenceList;
+import seedu.modtrack.module.Mod;
 import java.util.ArrayList;
 
 public class ListCompareCommand extends Command {
@@ -21,7 +23,7 @@ public class ListCompareCommand extends Command {
             }
         }
 
-        printComparison(completed, missing);
+        this.printComparison(completed, missing);
     }
 
     private void printComparison(ArrayList<Mod> completed, ArrayList<Mod> missing) {

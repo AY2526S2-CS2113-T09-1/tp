@@ -1,5 +1,6 @@
-package seedu.modtrack.model;
+package seedu.modtrack.commands;
 
+import seedu.modtrack.module.Mod;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,9 +27,10 @@ public class AddCommand extends Command {
 
     @Override
     public void execute(ArrayList<Mod> list) {
-        logger.log(Level.INFO, "Attempting to add module: {0}", modName);
+        logger.log(Level.INFO, "Attempting to add module: {0}", this.modName);
 
-        // Defensive check: If list is null, we log a severe error but return to avoid crash
+        // Defensive check: If list is null, we log a severe error but return to avoid
+        // crash
         if (list == null) {
             logger.log(Level.SEVERE, "Module list provided to AddCommand was null.");
             return;
@@ -38,7 +40,7 @@ public class AddCommand extends Command {
 
         for (Mod existingMod : list) {
             if (existingMod.getModName().trim().equalsIgnoreCase(this.modName.trim())) {
-                logger.log(Level.WARNING, "Duplicate detected for module: {0}", modName);
+                logger.log(Level.WARNING, "Duplicate detected for module: {0}", this.modName);
 
                 System.out.println("----------------------------------------------------");
                 if (!existingMod.getIsComplete()) {
@@ -60,7 +62,7 @@ public class AddCommand extends Command {
         // Assertions to verify internal state updates correctly
         assert list.size() == initialSize + 1 : "List size should increment after successful add";
 
-        logger.log(Level.INFO, "Successfully added {0}. New total: {1}", new Object[]{modName, list.size()});
+        logger.log(Level.INFO, "Successfully added {0}. New total: {1}", new Object[] { this.modName, list.size() });
         this.printAddMessage(list, mod);
     }
 

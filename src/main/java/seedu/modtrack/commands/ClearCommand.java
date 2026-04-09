@@ -1,5 +1,6 @@
-package seedu.modtrack.model;
+package seedu.modtrack.commands;
 
+import seedu.modtrack.module.Mod;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;

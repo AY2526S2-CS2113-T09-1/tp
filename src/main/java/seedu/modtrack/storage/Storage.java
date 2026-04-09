@@ -1,6 +1,6 @@
 package seedu.modtrack.storage;
 
-import seedu.modtrack.model.Mod;
+import seedu.modtrack.module.Mod;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,8 +34,11 @@ public class Storage {
     }
 
     public void save(ArrayList<Mod> list) throws IOException {
+        assert list != null : "Mod list cannot be null";
+
         FileWriter fw = new FileWriter(FILE_PATH);
         for (Mod mod : list) {
+            assert mod != null : "Mod in list cannot be null";
             fw.write(mod.toFileFormat() + System.lineSeparator());
         }
         fw.close();
@@ -55,12 +58,14 @@ public class Storage {
                     continue;
                 }
 
+                assert line.contains("|") : "Invalid storage format: missing delimiter";
+
                 String[] parts = line.split("\\s*\\|\\s*");
 
                 if (parts.length == 5) {
-                    list.add(parseLegacyFivePart(parts));
+                    list.add(this.parseLegacyFivePart(parts));
                 } else if (parts.length == 7) {
-                    list.add(parseCurrentSevenPart(parts));
+                    list.add(this.parseCurrentSevenPart(parts));
                 }
             }
 
@@ -78,9 +83,16 @@ public class Storage {
     private Mod parseLegacyFivePart(String[] parts) {
         String status = parts[0];
         String name = parts[1];
+
+        assert !name.isEmpty() : "Module name cannot be empty";
+
         int year = Integer.parseInt(parts[2]);
         int semester = Integer.parseInt(parts[3]);
         int credits = Integer.parseInt(parts[4]);
+
+        assert year > 0 : "Year must be positive";
+        assert semester == 1 || semester == 2 : "Invalid semester";
+        assert credits > 0 : "Credits must be positive";
 
         Mod mod = new Mod(name, year, semester, credits);
         if (status.equals("1")) {
