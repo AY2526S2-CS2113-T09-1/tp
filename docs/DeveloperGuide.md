@@ -15,15 +15,11 @@
     - [Parser component](#parser-component)
 
 3. [Implementation](#implementation)
-    - [Haofu's enhancements](#haofus-enhancements)
         - [Add feature](#1-add-feature)
         - [Delete feature](#2-delete-feature)
-    - [Yang Han's enchancements](#yang-hans-enchancement)
         - [List feature](#3-list-feature)
-    - [Christina's enhancement](#christinas-enchancements)
         - [Mark feature](#4-mark-feature)
         - [Unmark feature](#5-unmark-feature)
-    - [Ang Lee's enhancement](#ang-lees-enhancements)
         - [Exit feature](#6-exit-feature)
         - [Show Graduation Requirement feature](#7-show-graduation-requirement-feature)
 
@@ -50,11 +46,37 @@
 java -jar tp.jar
 ```
 
-{list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well}
-
 ## Design
-**ModTrack** (Modtrack.java) launches the application and shuts it down when the exit command is called:
-- At program start: It calls
+
+### Architecture Overview
+
+The Architecture Diagram below provides a high-level overview of the ModTrack application.
+
+![img_10.png](architectureDiagram.png)
+
+The application consists of five main components:
+* **`ModTrack`**: The main controller that manages the execution loop and component orchestration.
+* **`UI`**: Handles the user interface, including reading input and displaying messages.
+* **`Logic`**: Consists of the `Parser` and various `Command` classes to process user requests.
+* **`Model`**: Holds the in-memory data, primarily an `ArrayList<Mod>` and the `ReferenceList`.
+* **`Storage`**: Manages reading from and writing to the `ModTrack.txt` data file.
+
+### Component Initialization
+
+The **ModTrack** class (`Modtrack.java`) is responsible for launching the application and managing the lifecycle of each component.
+
+**At program start:**
+1. **Component Initialization**: `ModTrack` initializes the `UI`, `ReferenceList`, `Parser`, and `Storage`.
+2. **Reference Data Loading**: It calls `ReferenceList#populateReferenceList()` to load static module data.
+3. **Data Retrieval**: It calls `Storage#load()` to populate the `taskList` (the Model) with existing data from the disk.
+4. **Main Loop**: It enters a `while` loop that continues until an `ExitCommand` is executed.
+
+**During execution:**
+For every user input, `ModTrack` coordinates the following sequence:
+1. It passes the raw input to the **`Parser`** to generate a **`Command`**.
+2. It calls the **`Command#execute()`** method to update the **`Model`**.
+3. It calls **`Storage#save()`** immediately after execution to ensure data persistence.
+4. It uses the **`UI`** to display the outcome of the command to the user.
 
 ### UI Component
 
@@ -71,6 +93,9 @@ The UI does not contain any business logic, adhering to separation of concerns.
 
 ### Command Component
 The Command mechanism is facilitated by the abstract `Command` class. It serves as the base for all executable actions within **ModTrack**, allowing the `Parser` to delegate logic to specific command objects.
+
+Class Diagram:
+![img_10.png](CommandClassDiagram.png)
 
 The abstract `Command` class defines a core method: `execute(ArrayList<Mod> list)`. Concrete subclasses implement this method to perform specific operations on the module list.
 
@@ -102,9 +127,8 @@ public abstract class Command {
 
 ### Storage Component
 
-**API:** `Storage.java`
-
-![img_3.png](img_3.png)
+Class Diagram:
+![img_10.png](storageClassDiagram.png)
 
 The `Storage` component,
 
@@ -123,28 +147,25 @@ It performs the following steps:
 4. Constructs the corresponding `Command` object
 
 For example:
-- Input: `add n/CS2113 y/Y2 s/S1`
+- Input: `add n/CS2113 y/Year2 s/Sem1`
 - Output: `AddCommand` object with parsed parameters
 
 The Parser ensures that invalid inputs are handled gracefully by throwing appropriate exceptions.
 
-
-{Describe the design and implementation of the product. Use UML diagrams and short code snippets where applicable.}
+Class Diagram:
+![img_10.png](ParserClassDiagram.png)
 
 ## Implementation
-### Haofu's enhancements
 #### 1. Add Feature
 The **`AddCommand`** facilitates the addition of new modules to the application by storing details such as `name`, `year`, `semester`, and `credits`.
 
 **Implementation**
 
-The addition mechanism is facilitated by `VersionedAddressBook`. When a user executes the `AddCommand`, the `execute` method first performs a duplicate check. If the module is unique, it is added to the list. The `AddCommand` then calls `Model#commitAddressBook()`, causing the modified state of the address book after the addition to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+> If the command fails its execution (e.g., a duplicate module is found), the `AddCommand` returns early. Consequently, the list remains unchanged and the `ModTrack` main loop will skip the save process or save the unmodified state, ensuring no invalid data is persisted.
 
-> [!NOTE]
-> If the command fails its execution (e.g., a duplicate module is found), it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
 
 The following sequence diagram shows how an add operation goes through the `Logic` component:
-![img_6.png](img_6.png)
+![img_10.png](addCommandDiagram.png)
 
 ---
 
@@ -153,12 +174,24 @@ The **`DeleteCommand`** allows for the removal of a module from the list using a
 
 **Implementation**
 
-The deletion mechanism is also facilitated by `VersionedAddressBook`. Upon execution, the `DeleteCommand` iterates through the list to find the matching module. If a match is found and removed, the command calls `Model#commitAddressBook()`. This causes the modified state of the address book—now excluding the deleted module—to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+The deletion mechanism is managed by the **Logic** component and persisted via the **Storage** component. Upon execution, the `DeleteCommand` iterates through the `ArrayList<Mod>` to find the matching module. If a match is found and removed, the main loop in `ModTrack` immediately calls `Storage#save()` to overwrite the data file with the updated list, ensuring the change is persisted to the disk.
 
 The following sequence diagram shows how a delete operation goes through the `Logic` component:
-![img_7.png](img_7.png)
+![deleteCommandDiagram.png](deleteCommandDiagram.png)
 
-### Yang Han's enhancements
+#### 3. Clear Feature
+The **`ClearCommand`** allows for the removal of all modules from the tracker, effectively resetting the user's data list.
+
+**Implementation**
+
+The clear mechanism is managed by the **Logic** component and persisted via the **Storage** component. Upon execution, the `ClearCommand` calls the `clear()` method on the `ArrayList<Mod>`, removing all tracked modules from memory. After the command successfully executes, the main loop in `ModTrack` immediately calls `Storage#save()` to overwrite the data file with an empty list, ensuring the total reset is persisted to the disk.
+
+> [!NOTE]
+> This operation is irreversible once the `Storage#save()` method is called, as the existing `ModTrack.txt` file is overwritten with a blank state.
+
+The following sequence diagram shows how a clear operation goes through the system:
+![img_10.png](ClearCommandDiagram.png)
+
 #### List Feature
 
 User inputs `List` `List c/`
@@ -192,7 +225,6 @@ Design Considerations:
 `List c/` command Sequence Diagram 
 ![img_1.png](list1.png)
 
-### Christina's enchancements
 #### 4. Mark Feature
 
 The **`MarkCommand`** allows the user to mark a tracked module as completed by specifying its module code.
@@ -298,7 +330,6 @@ Besides `mark` and `unmark`, the application also supports other core command in
 
 This design allows the application to remain modular and scalable, as future commands can be introduced with minimal changes to the overall control flow.
 
-### Ang Lee's enhancements
 #### 6. Exit Feature
 
 The exit mechanism is facilitated by the `ExitCommand` class.
