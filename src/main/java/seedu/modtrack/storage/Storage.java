@@ -57,12 +57,9 @@ public class Storage {
 
                 String[] parts = line.split("\\s*\\|\\s*");
 
-                // Case 1: Legacy format from the very start of the project (5 parts)
                 if (parts.length == 5) {
                     list.add(parseLegacyFivePart(parts));
-                }
-                // Case 2: Current format without progress tracking (7 parts)
-                else if (parts.length == 7) {
+                } else if (parts.length == 7) {
                     list.add(parseCurrentSevenPart(parts));
                 }
             }
@@ -71,12 +68,10 @@ public class Storage {
         } catch (FileNotFoundException e) {
             System.out.println("Storage file not found.");
         } catch (NumberFormatException e) {
-            // This is triggered if year/sem/credits aren't valid integers
             System.out.println("Storage file contains invalid numeric data.");
         } catch (Exception e) {
             System.out.println("Error loading storage: " + e.getMessage());
         }
-
         return list;
     }
 
