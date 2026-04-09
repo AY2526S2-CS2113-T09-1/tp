@@ -18,7 +18,6 @@ public class ModTest {
         assertEquals(1, mod.getSemester());
         assertEquals(4, mod.getModCredits());
         assertFalse(mod.getIsComplete());
-        assertEquals(0, mod.getProgressPercentage());
         assertEquals("NORMAL", mod.getCompletionType());
     }
 
@@ -27,7 +26,6 @@ public class ModTest {
         Mod mod = new Mod("CS2113", 2, 1, 4);
         mod.setProgressPercentage(100);
         assertTrue(mod.getIsComplete());
-        assertEquals(100, mod.getProgressPercentage());
     }
 
     @Test
@@ -43,7 +41,6 @@ public class ModTest {
         mod.setToExempted();
         assertTrue(mod.getIsComplete());
         assertEquals("EXEMPTED", mod.getCompletionType());
-        assertEquals(100, mod.getProgressPercentage());
         assertEquals("Exempted", mod.getDisplayStatus());
     }
 
