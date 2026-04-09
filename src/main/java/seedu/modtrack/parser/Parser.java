@@ -1,23 +1,23 @@
 package seedu.modtrack.parser;
 
-import seedu.modtrack.model.AddCommand;
-import seedu.modtrack.model.AddPrereqCommand;
-import seedu.modtrack.model.ClearCommand;
-import seedu.modtrack.model.Command;
-import seedu.modtrack.model.DeleteCommand;
-import seedu.modtrack.model.ExemptCommand;
-import seedu.modtrack.model.ExitCommand;
-import seedu.modtrack.model.FindCommand;
-import seedu.modtrack.model.ListCommand;
-import seedu.modtrack.model.ListCompareCommand;
-import seedu.modtrack.model.MarkCommand;
-import seedu.modtrack.model.ShowGradReqCommand;
-import seedu.modtrack.model.ShowPrereqCommand;
-import seedu.modtrack.model.TransferCommand;
-import seedu.modtrack.model.UnmarkCommand;
-
 import java.util.ArrayList;
 
+import seedu.modtrack.commands.AddCommand;
+import seedu.modtrack.commands.AddPrereqCommand;
+import seedu.modtrack.commands.ClearCommand;
+import seedu.modtrack.commands.Command;
+import seedu.modtrack.commands.DeleteCommand;
+import seedu.modtrack.commands.ExemptCommand;
+import seedu.modtrack.commands.ExitCommand;
+import seedu.modtrack.commands.FindCommand;
+import seedu.modtrack.commands.ListCommand;
+import seedu.modtrack.commands.ListCompareCommand;
+import seedu.modtrack.commands.MarkCommand;
+import seedu.modtrack.commands.SetProgressCommand;
+import seedu.modtrack.commands.ShowGradReqCommand;
+import seedu.modtrack.commands.ShowPrereqCommand;
+import seedu.modtrack.commands.TransferCommand;
+import seedu.modtrack.commands.UnmarkCommand;
 
 public class Parser {
 
@@ -41,6 +41,8 @@ public class Parser {
             return this.parseMark(arguments);
         case "unmark":
             return this.parseUnmark(arguments);
+        case "progress":
+            return this.parseProgress(arguments);
         case "exempt":
             return this.parseExempt(arguments);
         case "transfer":
@@ -88,6 +90,24 @@ public class Parser {
     private Command parseUnmark(String arguments) throws InvalidCommandException {
         String modName = this.extractValue(arguments, "n/");
         return new UnmarkCommand(modName);
+    }
+
+    private Command parseProgress(String arguments) throws InvalidCommandException {
+        String modName = this.extractValue(arguments, "n/");
+        String progressText = this.extractValue(arguments, "p/");
+
+        int percentage;
+        try {
+            percentage = Integer.parseInt(progressText);
+        } catch (NumberFormatException e) {
+            throw new InvalidCommandException("Progress must be an integer from 0 to 100.");
+        }
+
+        if (percentage < 0 || percentage > 100) {
+            throw new InvalidCommandException("Progress must be between 0 and 100.");
+        }
+
+        return new SetProgressCommand(modName, percentage);
     }
 
     private Command parseExempt(String arguments) throws InvalidCommandException {
@@ -160,7 +180,7 @@ public class Parser {
         start += prefix.length();
         int nextPrefixIndex = input.length();
 
-        String[] prefixes = {"n/", "y/", "s/", "t/", "p/"};
+        String[] prefixes = { "n/", "y/", "s/", "t/", "p/" };
         for (String p : prefixes) {
             if (p.equals(prefix)) {
                 continue;

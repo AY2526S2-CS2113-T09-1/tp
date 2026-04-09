@@ -3,7 +3,7 @@ package seedu.modtrack.storage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import seedu.modtrack.model.Mod;
+import seedu.modtrack.module.Mod;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -19,7 +19,7 @@ public class StorageTest {
 
     @BeforeEach
     public void setUp() {
-        storage = new Storage();
+        this.storage = new Storage();
     }
 
     @AfterEach
@@ -40,8 +40,8 @@ public class StorageTest {
         originalList.add(mod);
 
         // Save and then Reload
-        storage.save(originalList);
-        ArrayList<Mod> loadedList = storage.load();
+        this.storage.save(originalList);
+        ArrayList<Mod> loadedList = this.storage.load();
 
         assertEquals(1, loadedList.size());
         assertEquals("CS2113", loadedList.get(0).getModName());
@@ -58,7 +58,7 @@ public class StorageTest {
         fw.write("1 | CS1010 | 1 | 1 | 4" + System.lineSeparator());
         fw.close();
 
-        ArrayList<Mod> loadedList = storage.load();
+        ArrayList<Mod> loadedList = this.storage.load();
 
         assertEquals(1, loadedList.size());
         assertEquals("CS1010", loadedList.get(0).getModName());
@@ -74,9 +74,10 @@ public class StorageTest {
         fw.write("1 | CS2113 | NotAYear | 1 | 4" + System.lineSeparator());
         fw.close();
 
-        ArrayList<Mod> list = storage.load();
+        ArrayList<Mod> list = this.storage.load();
 
-        // Based on your catch(NumberFormatException) logic, it prints an error and returns the list so far
+        // Based on your catch(NumberFormatException) logic, it prints an error and
+        // returns the list so far
         assertTrue(list.isEmpty());
     }
 

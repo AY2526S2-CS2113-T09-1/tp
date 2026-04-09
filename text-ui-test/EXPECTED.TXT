@@ -8,6 +8,7 @@ Name: CS1010
 Year: YEAR1
 Semester: SEM1
 Status: Incomplete
+Progress: 0%
 Modular Credits: 4
 Prerequisites: None
 
@@ -20,6 +21,7 @@ Name: CS2113
 Year: YEAR2
 Semester: SEM2
 Status: Incomplete
+Progress: 0%
 Modular Credits: 4
 Prerequisites: None
 
@@ -34,6 +36,7 @@ Name: CS1010
 Year: YEAR1
 Semester: SEM1
 Status: Incomplete
+Progress: 0%
 Modular Credits: 4
 Prerequisites: None
 
@@ -44,6 +47,7 @@ Name: CS2113
 Year: YEAR2
 Semester: SEM2
 Status: Completed
+Progress: 100%
 Modular Credits: 4
 Prerequisites: None
 
@@ -54,6 +58,7 @@ Name: CS2113
 Year: YEAR2
 Semester: SEM2
 Status: Incomplete
+Progress: 0%
 Modular Credits: 4
 Prerequisites: None
 
@@ -103,6 +108,7 @@ Name: CS2113
 Year: YEAR2
 Semester: SEM2
 Status: Incomplete
+Progress: 0%
 Modular Credits: 4
 Prerequisites: None
 

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import seedu.modtrack.module.Mod;
+import seedu.modtrack.commands.ExitCommand;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -14,24 +16,24 @@ public class ExitCommandTest {
 
     @BeforeEach
     public void setUp() {
-        list = new ArrayList<>();
+        this.list = new ArrayList<>();
         // Capture console output to verify the goodbye message
-        System.setOut(new PrintStream(outContent));
+        System.setOut(new PrintStream(this.outContent));
     }
 
     @Test
     public void isExit_flag_isSetToTrue() {
         ExitCommand command = new ExitCommand();
         // Verifying the inheritance logic from the base Command class
-        assertTrue(command.isExit, "ExitCommand should set the isExit flag to true upon instantiation.");
+        assertTrue(command.isExit(), "ExitCommand should set the isExit flag to true upon instantiation.");
     }
 
     @Test
     public void execute_printsGoodbyeMessage() {
         ExitCommand command = new ExitCommand();
-        command.execute(list);
+        command.execute(this.list);
 
-        String output = outContent.toString();
+        String output = this.outContent.toString();
         assertTrue(output.contains("Bye. Hope to see you again soon!"));
     }
 
@@ -41,6 +43,6 @@ public class ExitCommandTest {
         // Ensure it can execute even if the list is empty without throwing exceptions
         command.execute(new ArrayList<>());
 
-        assertTrue(command.isExit);
+        assertTrue(command.isExit());
     }
 }

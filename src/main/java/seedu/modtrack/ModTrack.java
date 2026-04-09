@@ -5,13 +5,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import seedu.modtrack.model.Command;
 import seedu.modtrack.parser.InvalidCommandException;
-import seedu.modtrack.model.Mod;
-import seedu.modtrack.model.ReferenceList;
-import seedu.modtrack.storage.Storage;
+import seedu.modtrack.commands.Command;
+import seedu.modtrack.module.Mod;
 import seedu.modtrack.parser.Parser;
+import seedu.modtrack.referencelist.ReferenceList;
+import seedu.modtrack.storage.Storage;
 import seedu.modtrack.ui.Ui;
 
 public class ModTrack {
@@ -28,7 +27,7 @@ public class ModTrack {
         this.parser = new Parser();
         this.storage = new Storage();
 
-        this.referenceList.populateReferenceList(this.referenceList.list);
+        this.referenceList.populateReferenceList(ReferenceList.getReferenceList());
         this.taskList = this.storage.load();
     }
 
