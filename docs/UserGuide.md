@@ -245,11 +245,13 @@ Are you sure? (type 'yes' to confirm): yes
 Noted. All modules have been cleared. Now you have an empty list.
 ----------------------------------------------------
 ```
+### Exiting the program: `exit` or `bye`
 
-### Exiting the program: `exit`
-Saves your data and exits.
-Format: `exit`
-Example Output:
+Saves your current module list and terminates the application.
+
+**Format:** `exit` or `bye`
+
+**Example Output:**
 ```text
 Bye. Hope to see you again soon!
 ```

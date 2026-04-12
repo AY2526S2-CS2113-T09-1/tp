@@ -455,6 +455,35 @@ This feature is important because it allows users to update their academic progr
 mark n/CS2113
 ```
 
+##### Parsing Logic
+
+The `Parser` identifies the `mark` keyword and extracts the module name from the `n/` prefix.
+
+A `MarkCommand` object is then created and passed to the execution loop.
+
+##### Class Interaction
+
+* `Parser` constructs the `MarkCommand`
+* `MarkCommand` searches through the `ArrayList<Mod>`
+* `Mod` updates its completion status through `setToDone()`
+* `Storage` persists the updated module list after execution
+
+##### Edge Cases and Error Handling
+
+The feature currently handles the following cases:
+
+* non-existent module names
+* repeated marking of an already completed module
+* parser rejects malformed user input before execution
+
+##### Current Limitation
+
+The current implementation uses linear search to locate the module. It also does not enforce prerequisite completion before a module can be marked as done.
+
+##### Cross-Feature Interaction
+
+The mark feature directly affects `list c/`, because completed modules count toward graduation requirement comparison. It also interacts conceptually with `showprereq`, as users may use prerequisite information before deciding to mark a module completed.
+
 ##### Design Considerations
 
 **Aspect: How modules are identified for marking**
@@ -501,84 +530,6 @@ This feature is useful when users make accidental updates or wish to revise thei
 unmark n/CS2113
 ```
 
-##### Design Considerations
-
-**Aspect: Whether to merge mark and unmark into one command**
-
-* **Alternative 1 (Current implementation):** Implement `mark` and `unmark` as two separate command classes.
-    * **Pros:** Clear separation of responsibilities and more intuitive command structure.
-    * **Cons:** Slight code duplication due to similar search logic.
-* **Alternative 2:** Use a single generic status command such as `status n/CS2113 s/incomplete`.
-    * **Pros:** More extensible for future status types.
-    * **Cons:** Adds unnecessary parsing complexity and makes the command less user-friendly.
-
-**Reasoning:**  
-The current implementation was chosen to keep user interactions simple and explicit. Since the application is intended for fast CLI usage, direct commands such as `mark` and `unmark` are easier for users to remember and use.
-
-##### Parsing Logic
-
-The `Parser` identifies the `mark` keyword and extracts the module name from the `n/` prefix.
-
-A `MarkCommand` object is then created and passed to the execution loop.
-
-##### Class Interaction
-
-* `Parser` constructs the `MarkCommand`
-* `MarkCommand` searches through the `ArrayList<Mod>`
-* `Mod` updates its completion status through `setToDone()`
-* `Storage` persists the updated module list after execution
-
-##### Edge Cases and Error Handling
-
-The feature currently handles the following cases:
-
-* non-existent module names
-* repeated marking of an already completed module
-* parser rejects malformed user input before execution
-
-##### Current Limitation
-
-The current implementation uses linear search to locate the module. It also does not enforce prerequisite completion before a module can be marked as done.
-
-##### Cross-Feature Interaction
-
-The mark feature directly affects `list c/`, because completed modules count toward graduation requirement comparison. It also interacts conceptually with `showprereq`, as users may use prerequisite information before deciding to mark a module completed.
-
-##### Sequence Diagram
-![img_14.png](img_14.png)
-
-The sequence diagram above shows how the `unmark` command is handled:
-1. The user enters the `unmark` command
-2. The `Parser` creates an `UnmarkCommand`
-3. `UnmarkCommand` iterates through the tracked module list
-4. If a matching module is found, its completion status is reset
-5. The updated list is saved through the `Storage` component
-
-##### UML Class Diagram
-
-![img_9.png](img_9.png)
-
-The class diagram above illustrates the command-based architecture used in ModTrack. `ModTrack` acts as the central controller of the application and coordinates interactions between the `Parser`, `Storage`, and the module list. The `Parser` is responsible for converting raw user input into a concrete subclass of the abstract `Command` class.
-
-The `Command` abstraction allows different user actions to be encapsulated into separate classes such as `MarkCommand`, `UnmarkCommand`, `ExitCommand`, and `ShowGradReqCommand`. This design promotes modularity by ensuring that each command handles only one responsibility.
-
-Besides `mark` and `unmark`, the application also supports other core command interactions such as `exit` and `show grad req`. These commands follow the same command-based design architecture, where the `Parser` maps user input into a specific subclass of `Command`, and the `ModTrack` main loop executes the corresponding action.
-
-This design allows the application to remain modular and scalable, as future commands can be introduced with minimal changes to the overall control flow.
-
-#### 7. Exit Feature
-
-The exit mechanism is facilitated by the `ExitCommand` class.
-
-**How it works:**
-- When executed, the application terminates gracefully
-- Any pending data is saved before exit
-
-**Example:**
-```
-exit
-```
-
 ##### Parsing Logic
 
 The `Parser` identifies the `unmark` keyword and extracts the module name from the `n/` prefix.
@@ -608,15 +559,69 @@ The current implementation does not differentiate between reversing a standard c
 
 The unmark feature directly affects `list c/` by removing the module from the set of completed requirements. It also interacts with `transfer`, since both features update completion-related state and should remain logically consistent in the `Mod` class.
 
-##### Sequence Diagram
+##### Design Considerations
 
-![img_10.png](Exit.png)
-The sequence diagram above shows how the exit command is handled:
-1. The user enters the `exit` command
-2. The input is parsed into an `ExitCommand`
-3. The command executes and checks for unsaved data
-4. If necessary, data is saved via the Storage component
-5. The system terminates gracefully and displays a farewell message
+**Aspect: Whether to merge mark and unmark into one command**
+
+* **Alternative 1 (Current implementation):** Implement `mark` and `unmark` as two separate command classes.
+    * **Pros:** Clear separation of responsibilities and more intuitive command structure.
+    * **Cons:** Slight code duplication due to similar search logic.
+* **Alternative 2:** Use a single generic status command such as `status n/CS2113 s/incomplete`.
+    * **Pros:** More extensible for future status types.
+    * **Cons:** Adds unnecessary parsing complexity and makes the command less user-friendly.
+
+**Reasoning:**  
+The current implementation was chosen to keep user interactions simple and explicit. Since the application is intended for fast CLI usage, direct commands such as `mark` and `unmark` are easier for users to remember and use.
+
+##### Sequence Diagram
+![img_14.png](img_14.png)
+
+The sequence diagram above shows how the `unmark` command is handled:
+1. The user enters the `unmark` command
+2. The `Parser` creates an `UnmarkCommand`
+3. `UnmarkCommand` iterates through the tracked module list
+4. If a matching module is found, its completion status is reset
+5. The updated list is saved through the `Storage` component
+
+##### UML Class Diagram
+
+![img_9.png](img_9.png)
+
+The class diagram above illustrates the command-based architecture used in ModTrack. `ModTrack` acts as the central controller of the application and coordinates interactions between the `Parser`, `Storage`, and the module list. The `Parser` is responsible for converting raw user input into a concrete subclass of the abstract `Command` class.
+
+The `Command` abstraction allows different user actions to be encapsulated into separate classes such as `MarkCommand`, `UnmarkCommand`, `ExitCommand`, and `ShowGradReqCommand`. This design promotes modularity by ensuring that each command handles only one responsibility.
+
+Besides `mark` and `unmark`, the application also supports other core command interactions such as `exit` and `show grad req`. These commands follow the same command-based design architecture, where the `Parser` maps user input into a specific subclass of `Command`, and the `ModTrack` main loop executes the corresponding action.
+
+This design allows the application to remain modular and scalable, as future commands can be introduced with minimal changes to the overall control flow.
+
+#### 7. Exit Feature
+
+The exit mechanism is facilitated by the `ExitCommand` class, which supports both `exit` and `bye` as trigger keywords.
+
+**How it works:**
+- **Keyword Support**: The `Parser` recognizes both `exit` and `bye` aliases, instantiating an `ExitCommand` for either input.
+- **Graceful Termination**: When executed, the command sets a boolean flag (`isExit = true`) which is checked by the main execution loop in `ModTrack`.
+- **Data Integrity**: Any pending module data is automatically saved by the `Storage` component before the application process ends.
+
+**Example:**
+```text
+exit
+```
+**or**
+```text
+bye
+```
+##### Sequence Diagram
+![img_4.png](ExitCommandDiagram.png)
+
+The sequence diagram above illustrates the termination flow:
+1. The user enters either the `exit` or `bye` command.
+2. The `Parser` identifies the alias and returns an `ExitCommand` object.
+3. The `ModTrack` controller calls `execute()` on the command.
+4. The `ModTrack` main loop detects the `isExit` flag is true.
+5. `ModTrack` triggers the final `Storage#save()` call.
+6. The `UI` displays a farewell message, and the loop terminates.
 
 #### 8. Show Graduation Requirement Feature
 This feature displays the graduation requirements tracked by the system.
