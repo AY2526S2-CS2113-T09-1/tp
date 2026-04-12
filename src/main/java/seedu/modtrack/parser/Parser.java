@@ -163,10 +163,13 @@ public class Parser {
     }
 
     private Command parseShow(String arguments) throws InvalidCommandException {
-        if (arguments.equalsIgnoreCase("grad req")) {
+        String normalizedArgs = arguments.trim().replaceAll("\\s+", " ");
+
+        if (normalizedArgs.equalsIgnoreCase("grad req")) {
             return new ShowGradReqCommand();
         }
-        throw new InvalidCommandException("Unknown show command.");
+
+        throw new InvalidCommandException("Unknown show command. Did you mean 'show grad req'?");
     }
 
     private String extractValue(String input, String prefix) throws InvalidCommandException {
