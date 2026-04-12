@@ -221,20 +221,29 @@ Core Modules:
 - CS1010
 - CG1111A
 - MA1511
-...
-
 ```
 
 ### Clearing all data: `clear`
 
 Deletes all currently tracked modules from the list.
+
 > [!WARNING]
 > This action is irreversible. All module data, including completion status and prerequisites, will be permanently removed.
 
-Format: `clear`
-Example Output:
+**Format:** `clear`
+
+**Confirmation Step:**
+Upon entering the command, the application will prompt you for confirmation to prevent accidental data loss. You must type `yes` and press Enter to proceed. Any other input will cancel the operation.
+
+**Example Interaction:**
 ```text
+> clear
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+WARNING: This will delete ALL tracked modules.
+Are you sure? (type 'yes' to confirm): yes
+----------------------------------------------------
 Noted. All modules have been cleared. Now you have an empty list.
+----------------------------------------------------
 ```
 
 ### Exiting the program: `exit`

@@ -288,11 +288,19 @@ The **`ClearCommand`** allows for the removal of all modules from the tracker, e
 
 **Implementation**
 
-The clear mechanism is managed by the **Logic** component and persisted via the **Storage** component. Upon execution, the `ClearCommand` calls the `clear()` method on the `ArrayList<Mod>`, removing all tracked modules from memory. After the command successfully executes, the main loop in `ModTrack` immediately calls `Storage#save()` to overwrite the data file with an empty list, ensuring the total reset is persisted to the disk.
+The clear mechanism is managed by the **Logic** component and involves a two-step verification process to prevent accidental data loss:
 
-> [!NOTE]
-> This operation is irreversible once the `Storage#save()` method is called, as the existing `ModTrack.txt` file is overwritten with a blank state.
+1. **Confirmation Prompt**: Upon execution, `ClearCommand` interacts with the `UI` to display a warning and request explicit user confirmation (e.g., typing 'yes').
+2. **Execution Gate**:
+    * If the user **declines** or provides invalid confirmation, the command terminates early, and the module list remains unchanged.
+    * If the user **confirms**, the command calls the `clear()` method on the `ArrayList<Mod>`, removing all tracked modules from memory.
 
+**Persistence**
+
+Following a successful (confirmed) execution, the main loop in `ModTrack` calls `Storage#save()` to overwrite the data file with an empty list. If the operation was cancelled during the confirmation step, the save call effectively persists the original, unmodified list, ensuring no data is lost.
+
+> [!IMPORTANT]
+> This operation is irreversible once confirmed and saved, as the existing `ModTrack.txt` file is overwritten with a blank state.
 
 **Example:**
 
@@ -301,32 +309,26 @@ clear
 ```
 
 ##### Parsing Logic
-
-The `Parser` identifies the `clear` keyword and constructs a `ClearCommand` object with no additional arguments.
+The `Parser` identifies the `clear` keyword and constructs a `ClearCommand` object. No additional arguments or flags are required.
 
 ##### Class Interaction
+* **`Parser`**: Constructs the `ClearCommand`.
+* **`ClearCommand`**: Invokes `Ui#getClearConfirmation()` to halt execution until the user provides a "yes" input.
+* **`ArrayList<Mod>`**: If confirmed, `clear()` is invoked on the list to remove all `Mod` objects.
+* **`Storage`**: Overwrites the data file with the empty list state immediately after successful execution.
 
-* `Parser` constructs the `ClearCommand`
-* `ClearCommand` invokes `clear()` on the `ArrayList<Mod>`
-* `Storage` persists the cleared state after execution
+##### Guard Mechanism (New)
+To mitigate the risk of accidental data loss, the `ClearCommand` implements a **blocking confirmation gate**. The logic checks for a case-insensitive "yes" string from the standard input. Any other input (including "no" or accidental keystrokes) will abort the command and keep the module list intact.
 
 ##### Edge Cases and Error Handling
-
-The feature currently handles the following cases:
-
-* clearing an already empty list
-* no partial state remains after successful execution
-
-##### Current Limitation
-
-The current implementation does not request a confirmation prompt before wiping all tracked data.
+* **Empty List**: Clearing an already empty list is allowed; the user is still prompted for confirmation, and the storage file is refreshed.
+* **Aborted Confirmation**: If the user cancels the prompt, the system logs the cancellation and returns to the main execution loop without modifying the data file.
 
 ##### Cross-Feature Interaction
-
-This command resets all data used by all other commands. After `clear`, commands such as `mark`, `transfer`, `showprereq`, and `list c/` will operate on an empty module list until modules are added again.
+This command serves as a hard reset for the application state. After a successful `clear`, features like `list c/` (Graduation Comparison) will report all requirements as "Missing" until the `ReferenceList` is re-populated via new `add` commands.
 
 The following sequence diagram shows how a clear operation goes through the system:
-![img_10.png](ClearCommandDiagram.png)
+![img_4.png](ClearCommandDiagram.png)
 
 #### 4. List Feature
 
