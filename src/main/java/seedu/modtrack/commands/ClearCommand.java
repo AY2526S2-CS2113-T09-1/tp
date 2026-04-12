@@ -15,8 +15,13 @@ public class ClearCommand extends Command {
 
     @Override
     public void execute(ArrayList<Mod> list, Ui ui) {
-        logger.log(Level.INFO, "Attempting to clear the module list.");
+        // 1. Ask for confirmation via UI
+        if (!ui.getClearConfirmation()) {
+            System.out.println("Clear operation cancelled.");
+            return;
+        }
 
+        logger.log(Level.INFO, "User confirmed clear. Wiping list.");
         // Assertion: Verify the list exists before trying to clear it
         assert list != null : "Module list should not be null during clear operation";
 

@@ -29,6 +29,7 @@ public class ListCompareCommand extends Command {
                 completed.add(reqMod);
                 reqMod.setToDone();
             } else {
+                reqMod.setToUndone();
                 missing.add(reqMod);
             }
         }

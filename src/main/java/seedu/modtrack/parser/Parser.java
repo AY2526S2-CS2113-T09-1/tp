@@ -147,20 +147,29 @@ public class Parser {
 
     private Command parseList(String arguments) throws InvalidCommandException {
         String trimmedArgs = arguments.trim();
-        if (trimmedArgs.contains("c/")) {
-            return new ListCompareCommand();
-        }
+
+        // If no arguments, return the standard list
         if (trimmedArgs.isEmpty()) {
             return new ListCommand();
         }
-        throw new InvalidCommandException("Unknown list command.");
+
+        // Check if the argument is EXACTLY "c/" (case-insensitive)
+        if (trimmedArgs.equalsIgnoreCase("c/")) {
+            return new ListCompareCommand();
+        }
+
+        // If there is anything else (e.g., "list c/abc" or "list random"), throw error
+        throw new InvalidCommandException("Invalid list command. Use 'list' or 'list c/'.");
     }
 
     private Command parseShow(String arguments) throws InvalidCommandException {
-        if (arguments.equalsIgnoreCase("grad req")) {
+        String normalizedArgs = arguments.trim().replaceAll("\\s+", " ");
+
+        if (normalizedArgs.equalsIgnoreCase("grad req")) {
             return new ShowGradReqCommand();
         }
-        throw new InvalidCommandException("Unknown show command.");
+
+        throw new InvalidCommandException("Unknown show command. Did you mean 'show grad req'?");
     }
 
     private String extractValue(String input, String prefix) throws InvalidCommandException {

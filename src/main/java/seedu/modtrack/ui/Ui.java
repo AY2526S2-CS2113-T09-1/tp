@@ -1,8 +1,10 @@
 package seedu.modtrack.ui;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import seedu.modtrack.module.Mod;
+import seedu.modtrack.parser.InvalidCommandException;
 
 public class Ui {
 
@@ -28,9 +30,10 @@ public class Ui {
                 + "'. Thankssssss!");
     }
 
-    public void showInvalidCommandError() {
-        System.out.println(
-                "Invalid command. Please input the instruction again begining with 'bye'.");
+    public void showInvalidCommandError(InvalidCommandException e) {
+        System.out.println("----------------------------------------------------");
+        System.out.println(e.getMessage());
+        System.out.println("----------------------------------------------------");
     }
 
     public void showInvalidNumberError() {
@@ -149,6 +152,17 @@ public class Ui {
             }
         }
         this.showDivider();
+    }
+
+    public boolean getClearConfirmation() {
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("WARNING: This will delete ALL tracked modules.");
+        System.out.print("Are you sure? (type 'yes' to confirm): ");
+
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine().trim().toLowerCase();
+
+        return input.equals("yes");
     }
 
     public void showGradReq() {
