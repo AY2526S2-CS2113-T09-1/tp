@@ -53,9 +53,15 @@ public class Parser {
         case "show":
             return this.parseShow(arguments);
         case "clear":
+            if (!arguments.isEmpty()) {
+                throw new InvalidCommandException("The 'clear' command does not take any arguments.");
+            }
             return new ClearCommand();
         case "exit":
         case "bye":
+            if (!arguments.isEmpty()) {
+                throw new InvalidCommandException("The '" + commandWord + "' command does not take any arguments.");
+            }
             return new ExitCommand();
         default:
             throw new InvalidCommandException("Invalid command.");
