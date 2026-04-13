@@ -156,7 +156,7 @@ public class Ui {
         }
     }
 
-    public void showComparedList(ArrayList<Mod> completedModules, ArrayList<Mod> missingModules) {
+    public void showComparedList(ArrayList<Mod> completedModules, ArrayList<Mod> missingModules, ArrayList<Mod> extraModules) {
         assert completedModules != null : "Completed modules list should not be null";
         assert missingModules != null : "Missing modules list should not be null";
 
@@ -180,6 +180,16 @@ public class Ui {
             for (Mod mod : missingModules) {
                 assert mod != null : "Missing module should not be null";
                 System.out.println(mod);
+            }
+        }
+
+        System.out.println("\n[+] ADDITIONAL/UNRECOGNIZED MODULES:");
+        if (extraModules.isEmpty()) {
+            System.out.println("  (No additional modules found)");
+        } else {
+            for (Mod mod : extraModules) {
+                assert mod != null : "Extra module should not be null";
+                System.out.println(mod + " (Not required for graduation)");
             }
         }
         this.showDivider();

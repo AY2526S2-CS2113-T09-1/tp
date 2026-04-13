@@ -14,38 +14,48 @@ public class ListCompareCommand extends Command {
 
         ArrayList<Mod> completed = new ArrayList<>();
         ArrayList<Mod> missing = new ArrayList<>();
+        ArrayList<Mod> extraModules = new ArrayList<>();
 
         for (Mod reqMod : requiredModules) {
-            boolean isFulfilled = false;
+            Mod matchingTask = null;
 
             for (Mod task : taskList) {
-                String reqName = reqMod.getModName().trim().toLowerCase();
-                String taskName = task.getModName().trim().toLowerCase();
-                if (reqName.contains(taskName)&& task.getIsComplete()) {
+                if (isMatch(reqMod,task)) {
                     boolean isNormalComplete = task.getIsComplete();
                     boolean isTransferred = task.getCompletionType().equals("TRANSFERRED");
                     boolean isExempted = task.getCompletionType().equals("EXEMPTED");
                     if (isNormalComplete || isTransferred || isExempted) {
-                        isFulfilled = true;
-                        reqMod.setToDone();
-                        reqMod.setCompletionType(task.getCompletionType());
-
+                        matchingTask = task;
                     }
                     break;
                 }
             }
 
-            if (isFulfilled) {
-                completed.add(reqMod);
+            if (matchingTask!=null) {
+                completed.add(matchingTask);
             } else {
-                reqMod.setToUndone();
                 missing.add(reqMod);
             }
         }
+        for (Mod task : taskList) {
+            boolean foundInRef = false;
+            for (Mod reqMod : requiredModules) {
+                if (isMatch(reqMod, task)) {
+                    foundInRef = true;
+                    break;
+                }
+            }
+            if (!foundInRef) {
+                extraModules.add(task);
+            }
+        }
 
-        assert (completed.size() + missing.size()) == requiredModules.size()
-                : "Total categorized modules must equal total required modules";
+        ui.showComparedList(completed, missing,extraModules);
+    }
 
-        ui.showComparedList(completed, missing);
+    private boolean isMatch(Mod req, Mod task) {
+        String reqName = req.getModName().trim().toLowerCase();
+        String taskName = task.getModName().trim().toLowerCase();
+        return reqName.contains(taskName);
     }
 }
