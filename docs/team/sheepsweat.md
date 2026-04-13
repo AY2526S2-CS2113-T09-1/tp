@@ -32,6 +32,16 @@ development (e.g., ensuring ModuleList is never null before a search).
 * **I/O Testing:** Implemented a specialized testing harness using ByteArrayOutputStream to capture and verify console outputs. 
 This ensured that the UI remained consistent across different OS environments.
 * **Edge Case Coverage:** Designed "Negative Path" tests to gracefully handle invalid user inputs, such as incorrect module formats or out-of-bounds indices. 
+### **4. Bug Fixes & Logic Refinement**
+* **Dependency Integrity Logic:** Engineered a multi-stage validation system for the prereq command to prevent illogical academic structures. 
+  * **Circular Dependency Detection:** Implemented a cross-module lookup to block mutual dependencies ($A \leftrightarrow B$), ensuring the graduation path remains valid.
+  * **Self-Dependency Filtering:** Integrated a Parser-level check to prevent a module from being its own prerequisite.
+  * **Non-Breaking Execution:** Utilized continue flow-control to allow valid prerequisites to be processed even when invalid ones were detected in the same command string.
+* **Parser Robustness & Sanitization:** Hardened the input handling to eliminate edge-case failures and "trailing word" bugs.
+  * **Strict Argument Enforcement:** Configured the Parser to strictly reject orphaned arguments for commands like clear and exit, preventing unintended state changes.
+* **State-Aware UI Synchronization:** Refined the command-to-UI communication to ensure the user is never misinformed about the application's internal state.
+  * Dynamic Feedback: Adjusted the execution flow of the AddPrereqCommand to distinguish between a "Successful Update" and a "Current State View" based on whether new data was actually added or blocked by validation logic.
+
 ---
 
 ## **Contributions to Documentation**
