@@ -50,7 +50,7 @@ public class ModTrack {
                     isRunning = false;
                 }
             } catch (InvalidCommandException e) {
-                this.ui.showInvalidCommandError();
+                this.ui.showInvalidCommandError(e);
             } catch (IOException e) {
                 this.ui.showSaveError();
             }
@@ -60,7 +60,7 @@ public class ModTrack {
     }
 
     public static void main(String[] args) {
-        Logger.getLogger("seedu.modtrack").setLevel(Level.WARNING);
+        Logger.getLogger("seedu.modtrack").setLevel(Level.SEVERE);
         ModTrack modTrack = new ModTrack();
         modTrack.run();
     }

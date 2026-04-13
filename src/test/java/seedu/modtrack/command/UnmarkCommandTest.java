@@ -68,4 +68,14 @@ class UnmarkCommandTest {
         String output = this.outContent.toString().trim();
         assertTrue(output.contains("No modules found in the list."), "Should handle missing modules gracefully");
     }
+    @Test
+    void execute_emptyList_printsGracefulError() {
+        this.modList.clear();
+        UnmarkCommand command = new UnmarkCommand("CS2113");
+
+        command.execute(this.modList, this.ui);
+
+        String output = this.outContent.toString().trim();
+        assertTrue(output.contains("No modules found") , "Should handle empty list without crashing");
+    }
 }

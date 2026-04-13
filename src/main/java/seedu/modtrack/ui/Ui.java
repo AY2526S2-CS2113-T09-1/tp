@@ -1,8 +1,10 @@
 package seedu.modtrack.ui;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import seedu.modtrack.module.Mod;
+import seedu.modtrack.parser.InvalidCommandException;
 
 public class Ui {
 
@@ -29,9 +31,10 @@ public class Ui {
                 + "'. Thankssssss!");
     }
 
-    public void showInvalidCommandError() {
-        System.out.println(
-                "Invalid command. Please input the instruction again begining with 'bye'.");
+    public void showInvalidCommandError(InvalidCommandException e) {
+        System.out.println("----------------------------------------------------");
+        System.out.println(e.getMessage());
+        System.out.println("----------------------------------------------------");
     }
 
     public void showInvalidNumberError() {
@@ -160,7 +163,7 @@ public class Ui {
         this.showDivider();
         System.out.println("Comparison with Graduation Requirements (CE):");
 
-        System.out.println("\n✔ COMPLETED MODULES:");
+        System.out.println("\n[V] COMPLETED MODULES:");
         if (completedModules.isEmpty()) {
             System.out.println("  (None yet)");
         } else {
@@ -170,7 +173,7 @@ public class Ui {
             }
         }
 
-        System.out.println("\n✘ MISSING/UNCOMPLETED MODULES:");
+        System.out.println("\n[X] MISSING/UNCOMPLETED MODULES:");
         if (missingModules.isEmpty()) {
             System.out.println("  Congratulations! All requirements met.");
         } else {
@@ -180,6 +183,17 @@ public class Ui {
             }
         }
         this.showDivider();
+    }
+
+    public boolean getClearConfirmation() {
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("WARNING: This will delete ALL tracked modules.");
+        System.out.print("Are you sure? (type 'yes' to confirm): ");
+
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine().trim().toLowerCase();
+
+        return input.equals("yes");
     }
 
     public void showGradReq() {
@@ -222,5 +236,9 @@ public class Ui {
         System.out.println("General Education Curriculum:");
         System.out.println("- GENXXXX");
         System.out.println("- GECXXXX");
+    }
+    public void showCircularDependencyWarning(String prereq, String targetMod) {
+        System.out.println("Warning: Circular dependency detected!");
+        System.out.println(prereq + " already requires " + targetMod + ". Skipping.");
     }
 }

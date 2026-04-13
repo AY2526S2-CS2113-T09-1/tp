@@ -69,4 +69,34 @@ class ListCommandTest {
         String expected = "===== Your Tracked Modules =====" + System.lineSeparator() + "No modules tracked yet.";
         assertEquals(expected.trim(), output);
     }
+
+    @Test
+    void execute_multipleModules_printsAllInOrder() {
+        ArrayList<Mod> modInterests = new ArrayList<>();
+        modInterests.add(new Mod("CS1010", 1, 1, 4));
+        modInterests.add(new Mod("MA1511", 1, 1, 2));
+
+        ListCommand command = new ListCommand();
+        command.execute(modInterests, this.ui);
+
+        String output = this.outContent.toString();
+
+        // Check that BOTH names appear in the output
+        assertTrue(output.contains("CS1010"));
+        assertTrue(output.contains("MA1511"));
+    }
+
+    @Test
+    void execute_completedModule_showsCorrectStatus() {
+        ArrayList<Mod> modInterests = new ArrayList<>();
+        Mod completedMod = new Mod("CS1010", 1, 1, 4);
+        completedMod.setToDone(); // Assuming this method exists
+        modInterests.add(completedMod);
+
+        new ListCommand().execute(modInterests, this.ui);
+
+        String output = this.outContent.toString();
+        assertTrue(output.contains("Status: Complete"), "Should show 'Complete' for finished modules");
+    }
+
 }
