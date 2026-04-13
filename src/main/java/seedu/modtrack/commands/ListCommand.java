@@ -9,6 +9,7 @@ public class ListCommand extends Command {
 
     @Override
     public void execute(ArrayList<Mod> list, Ui ui) {
-        ui.showList(list);
+        int totalModuleCredits = list.stream().mapToInt(Mod::getModCredits).sum();
+        ui.showList(list, totalModuleCredits);
     }
 }

@@ -23,7 +23,7 @@ public class AddPrereqCommand extends Command {
                     if (prereq.equalsIgnoreCase(this.modName)) {
                         continue;
                     }
-                    Mod existingPrereqMod = findModule(list, prereq);
+                    Mod existingPrereqMod = this.findModule(list, prereq);
                     if (existingPrereqMod != null && existingPrereqMod.getPrerequisites().contains(this.modName)) {
                         ui.showCircularDependencyWarning(prereq, this.modName);
                         continue;

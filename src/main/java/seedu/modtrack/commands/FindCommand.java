@@ -23,7 +23,7 @@ public class FindCommand extends Command {
                 ui.showMatchingModule(modFound);
             }
         } else {
-            ui.showNoModulesFound();
+            ui.showNoMatchingModulesFound();
         }
     }
 

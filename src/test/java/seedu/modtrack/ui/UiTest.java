@@ -116,8 +116,9 @@ public class UiTest {
     @Test
     public void showList_emptyList_printsEmptyMessage() {
         ArrayList<Mod> list = new ArrayList<>();
+        int totalModuleCredits = list.stream().mapToInt(Mod::getModCredits).sum();
 
-        this.ui.showList(list);
+        this.ui.showList(list, totalModuleCredits);
         String output = this.getOutput();
 
         assertTrue(output.contains("No modules tracked yet."));
@@ -128,8 +129,9 @@ public class UiTest {
         ArrayList<Mod> list = new ArrayList<>();
         Mod mod = new Mod("CS2113", 2, 1, 4);
         list.add(mod);
+        int totalModuleCredits = list.stream().mapToInt(Mod::getModCredits).sum();
 
-        this.ui.showList(list);
+        this.ui.showList(list, totalModuleCredits);
         String output = this.getOutput();
 
         assertTrue(output.contains("CS2113"));

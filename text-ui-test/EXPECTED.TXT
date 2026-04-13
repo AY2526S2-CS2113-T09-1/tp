@@ -40,6 +40,8 @@ Prerequisites: None
 Now you have 1 mods in the list.
 ----------------------------------------------------
 ===== Your Tracked Modules =====
+Total Modular Credits: 4
+Total Remaining Modular Credits: 156
 Name: CS2113
 Year: YEAR2
 Semester: SEM2
@@ -50,6 +52,8 @@ Prerequisites: None
 Module marked as incomplete:
 CS2113
 ===== Your Tracked Modules =====
+Total Modular Credits: 4
+Total Remaining Modular Credits: 156
 Name: CS2113
 Year: YEAR2
 Semester: SEM2

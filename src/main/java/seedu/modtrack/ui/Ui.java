@@ -39,8 +39,12 @@ public class Ui {
         System.out.println("Error saving data. Please try again.");
     }
 
-    public void showNoModulesFound() {
+    public void showNoMatchingModulesFound() {
         System.out.println("No matching module found.");
+    }
+
+    public void showNoModulesFound() {
+        System.out.println("No modules found in the list.");
     }
 
     public void showExistingIncompleteModuleError(Mod existingMod) {
@@ -136,10 +140,12 @@ public class Ui {
         System.out.println(mod.getModName());
     }
 
-    public void showList(ArrayList<Mod> list) {
+    public void showList(ArrayList<Mod> list, int totalModuleCredits) {
         assert list != null : "Module list should not be null";
 
         System.out.println("===== Your Tracked Modules =====");
+        System.out.println("Total Modular Credits: " + totalModuleCredits);
+        System.out.println("Total Remaining Modular Credits: " + (160 - totalModuleCredits));
         if (list.isEmpty()) {
             System.out.println("No modules tracked yet.");
         } else {
