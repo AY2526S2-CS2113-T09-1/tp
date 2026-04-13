@@ -40,7 +40,7 @@ public class Ui {
     }
 
     public void showNoModulesFound() {
-        System.out.println("No modules found in the list.");
+        System.out.println("No matching module found.");
     }
 
     public void showExistingIncompleteModuleError(Mod existingMod) {

@@ -157,7 +157,7 @@ Prerequisites: None
 find n/CS1010
 ----------------------------------------------------
 Matching modules:
-No modules found in the list.
+No matching module found.
 ```
 
 
