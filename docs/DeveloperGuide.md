@@ -921,7 +921,7 @@ Clear existing data: If you have used the app before, delete the data.txt file (
 
 Launch the app: Run the program.
 
-Expected Result: The UI should display a welcome message and indicate that a new data file has been created.
+Expected Result: The UI should display the opening greeting text. A new ./data/ModTrack.txt file will be created automatically in the background.
 
 2. Loading Sample Data
 
@@ -931,9 +931,11 @@ Open the data.txt file in a text editor.
 
 Paste the following sample lines (adjust the format to match your specific toFileFormat logic):
 
+```text 
 0 | CS1010 | 1 | 1 | 4 | NORMAL | -
 0 | MA1511 | 1 | 1 | 2 | NORMAL | -
 0 | CS2113 | 2 | 2 | 4 | NORMAL | -
+```
 
 Relaunch the app.
 
