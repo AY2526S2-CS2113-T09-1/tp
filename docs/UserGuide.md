@@ -205,7 +205,11 @@ No modules tracked yet.
 ```
 
 ### Compare with Graduation Requirements: `list c/`
-Compares your current tracked list against the official Computer Engineering graduation requirements to show what is missing.
+Compares your current tracked list against the official Computer Engineering graduation requirements to show what is missing. 
+
+The list compared against will only total up to 120MCs as it only compares against the compulsory modules required by a computer engineering student.
+The remaining unrestricted electives (UEs) will be recorded under `Additional/Unrecognised Modules`
+
 Format: `list c/`
 Example Output:
 ```text
@@ -262,6 +266,37 @@ Prerequisites: None
 ✘ MISSING/UNCOMPLETED MODULES:
   Congratulations! All requirements met.
 ____________________________________________________________
+```
+
+Example of UE being tracked:
+```text
+add n/EC1101 y/YEAR1 s/SEM1
+
+===== Your Tracked Modules =====
+Total Modular Credits: 4
+Total Remaining Modular Credits: 156
+Name: EC1101
+Year: YEAR1
+Semester: SEM1
+Status: Incomplete
+Modular Credits: 4
+Prerequisites: None
+
+list c/
+
+.
+.
+.
+
+[+] ADDITIONAL/UNRECOGNIZED MODULES:
+Name: EC1101
+Year: YEAR1
+Semester: SEM1
+Status: Incomplete
+Modular Credits: 4
+Prerequisites: None
+ (Not required for graduation)
+----------------------------------------------------
 ```
 
 ### Show graduation requirements: `show grad req`
