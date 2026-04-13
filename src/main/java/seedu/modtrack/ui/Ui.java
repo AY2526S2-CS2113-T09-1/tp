@@ -24,6 +24,7 @@ public class Ui {
     }
 
     public void showEmptyDescriptionError(String command) {
+        assert command != null : "Command should not be null";
         System.out.println(" " + command + " Number cannot be empty, ensure a Module code is written after '" + command
                 + "'. Thankssssss!");
     }
@@ -46,6 +47,8 @@ public class Ui {
     }
 
     public void showExistingIncompleteModuleError(Mod existingMod) {
+        assert existingMod != null : "Existing module should not be null";
+
         System.out.println("This module already exists in the list, but is currently incomplete.");
         System.out.println("To mark this module as complete, use: mark n/" + existingMod.getModName());
     }
@@ -55,6 +58,9 @@ public class Ui {
     }
 
     public void showAddModule(ArrayList<Mod> list, Mod mod) {
+        assert list != null : "Module list should not be null";
+        assert mod != null : "Module should not be null";
+
         this.showDivider();
         System.out.println("Module added:\n");
         System.out.println(mod.toString());
@@ -63,14 +69,18 @@ public class Ui {
     }
 
     public void showUpdatedPrerequisites(Mod mod) {
+        assert mod != null : "Module should not be null";
         System.out.println("Prerequisites updated for " + mod.getModName() + ":");
     }
 
     public void listPrerequisite(Mod mod) {
+        assert mod != null : "Module should not be null";
         System.out.println(String.join(", ", mod.getPrerequisites()));
     }
 
     public void showPrerequisites(Mod mod) {
+        assert mod != null : "Module should not be null";
+
         System.out.println("Prerequisites for " + mod.getModName() + ":");
         if (mod.getPrerequisites().isEmpty()) {
             System.out.println("None");
@@ -84,6 +94,9 @@ public class Ui {
     }
 
     public void showDeletedModule(Mod mod, int remainingModules) {
+        assert mod != null : "Module should not be null";
+        assert remainingModules >= 0 : "Remaining modules cannot be negative";
+
         this.showDivider();
         System.out.println("Noted. I've removed this mod:\n");
         System.out.println(mod.toString());
@@ -92,42 +105,58 @@ public class Ui {
     }
 
     public void showExemptedModule(Mod mod) {
+        assert mod != null : "Module should not be null";
+
         System.out.println("Module marked as exempted:");
         System.out.println(mod.getModName());
     }
 
     public void showMatchingModule(Mod mod) {
+        assert mod != null : "Module should not be null";
+
         this.showDivider();
         System.out.println(mod);
     }
 
     public void showTransferredModule(Mod mod) {
+        assert mod != null : "Module should not be null";
+
         System.out.println("Module marked as transferred:");
         System.out.println(mod.getModName());
     }
 
     public void showMarkedCourse(Mod mod) {
+        assert mod != null : "Module should not be null";
+
         System.out.println("Module marked as completed:");
         System.out.println(mod.getModName());
     }
 
     public void showUnmarkedCourse(Mod mod) {
+        assert mod != null : "Module should not be null";
+
         System.out.println("Module marked as incomplete:");
         System.out.println(mod.getModName());
     }
 
     public void showList(ArrayList<Mod> list) {
+        assert list != null : "Module list should not be null";
+
         System.out.println("===== Your Tracked Modules =====");
         if (list.isEmpty()) {
             System.out.println("No modules tracked yet.");
         } else {
             for (Mod mod : list) {
+                assert mod != null : "Module inside list should not be null";
                 System.out.println(mod);
             }
         }
     }
 
     public void showComparedList(ArrayList<Mod> completedModules, ArrayList<Mod> missingModules) {
+        assert completedModules != null : "Completed modules list should not be null";
+        assert missingModules != null : "Missing modules list should not be null";
+
         this.showDivider();
         System.out.println("Comparison with Graduation Requirements (CE):");
 
@@ -136,6 +165,7 @@ public class Ui {
             System.out.println("  (None yet)");
         } else {
             for (Mod mod : completedModules) {
+                assert mod != null : "Completed module should not be null";
                 System.out.println(mod);
             }
         }
@@ -145,6 +175,7 @@ public class Ui {
             System.out.println("  Congratulations! All requirements met.");
         } else {
             for (Mod mod : missingModules) {
+                assert mod != null : "Missing module should not be null";
                 System.out.println(mod);
             }
         }
