@@ -109,8 +109,13 @@ EE2026
 
 ### Finding a module: 'find'
 Searches for modules in your tracker using a keyword. The search is case-insensitive and matches partial module names.
+
 Format: `find n/NAME`
-Example: `find n/CS2113`
+
+**Example 1: Specific Search**
+`find n/cs2113`
+
+**Example Output:**
 ```text
 find n/CS2113
 ----------------------------------------------------
@@ -122,7 +127,33 @@ Semester: SEM1
 Status: Incomplete
 Modular Credits: 4
 Prerequisites: None
+```
+**Example 2: Partial Keyword Search**
+`find n/cs`
 
+**Example Output:**
+```
+----------------------------------------------------
+Matching modules:
+----------------------------------------------------
+Name: CS2113
+Year: YEAR2
+Semester: SEM1
+Status: Incomplete
+Modular Credits: 4
+Prerequisites: None
+
+----------------------------------------------------
+Name: cs1010
+Year: YEAR1
+Semester: SEM1
+Status: Incomplete
+Modular Credits: 4
+Prerequisites: None
+```
+
+**Example Output for no match found:**
+```
 find n/CS1010
 ----------------------------------------------------
 Matching modules:
