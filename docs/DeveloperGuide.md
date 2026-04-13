@@ -914,60 +914,62 @@ This application provides:
 * *Parser* - Component that interprets user input
 
 ## Instructions for manual testing
+### 1. Initial Launch and Setup
 
-1. Initial Launch and Setup
+**Action:**
+1. **Clear existing data**: If you have used the app before, delete the `./data/` directory to start with a clean state.
+2. **Launch the app**: Run the program.
 
-Clear existing data: If you have used the app before, delete the data.txt file (or the directory specified in your Storage settings) to start with a clean state.
+**Expected Result:**
+The UI should display the opening greeting text. A new `./data/ModTrack.txt` file will be created automatically in the background.
 
-Launch the app: Run the program.
+---
 
-Expected Result: The UI should display the opening greeting text. A new ./data/ModTrack.txt file will be created automatically in the background.
+### 2. Loading Sample Data
 
-2. Loading Sample Data
+**Action:**
+1. Close the app.
+2. Open the `./data/ModTrack.txt` file in a text editor.
+3. Paste the following sample lines:
+   ```text
+   0 | CS1010 | 1 | 1 | 4 | NORMAL | -
+   0 | MA1511 | 1 | 1 | 2 | NORMAL | -
+   0 | CS2113 | 2 | 2 | 4 | NORMAL | -
+   ```
+4. Relaunch the app.
+5. Run the `list` command.
 
-Close the app.
+**Expected Result:**
+The module `MA1508E` should be successfully reloaded and present in the list output, confirming that the `Storage` class correctly wrote the data to `ModTrack.txt` and read it back upon startup.
+The app should successfully load and display the three modules: `CS1010`, `MA1511`, and `CS2113`.
 
-Open the data.txt file in a text editor.
+### 3. Testing Core Commands
 
-Paste the following sample lines (adjust the format to match your specific toFileFormat logic):
+#### **Find Functionality**
+* **Test Case:** `find n/CS`
+    * **Expected Result:** Displays a list containing `CS1010` and `CS2113` (assuming these were loaded in Section 2). The header "Matching modules:" should be visible.
+* **Test Case:** `find n/non-existent`
+    * **Expected Result:** Displays the error message: `"No modules found with the given keyword."`
 
-```text 
-0 | CS1010 | 1 | 1 | 4 | NORMAL | -
-0 | MA1511 | 1 | 1 | 2 | NORMAL | -
-0 | CS2113 | 2 | 2 | 4 | NORMAL | -
-```
+#### **Exemption Logic**
+* **Test Case:** `exempt n/CS2113`
+    * **Expected Result:** UI displays the confirmation message: `"Module marked as exempted: CS2113"`.
+    * **Verification:** Run the `list` command; the status icon/text for `CS2113` should reflect the exempted status.
 
-Relaunch the app.
+#### **Graduation Requirements**
+* **Test Case:** `show grad req`
+    * **Expected Result:** Displays the categorized list of CEG requirements (e.g., Common Tech Core, EE/CS Core, etc.) as defined in the `Ui` class.
 
-Expected Result: Run the list command; it should now display these three modules correctly.
+---
 
-3. Testing Core Commands
+### 4. Data Persistence (Storage)
 
-Find Functionality
-(Test Case: find n/CS)
+**Action:**
+1. Launch the app and add a new module: `add n/MA1508E y/YEAR1 s/SEM2`.
+2. Verify the addition by running `list`.
+3. Exit the app using the `exit` or `bye` command.
+4. Re-open the app.
+5. Run the `list` command.
 
-Expected Result: Displays CS1010 and CS2113.
-
-Test Case: find non-existent
-
-Expected Result: Displays "No matching module found."
-
-Exemption Logic
-(Test Case: exempt n/CS2113)
-
-Expected Result: Confirmation message "Module marked as exempted: CS2113". Running list should show the status has changed.
-
-Graduation Requirements
-(Test Case: grad)
-
-Expected Result: Displays the static list of CEG requirements as defined in the Ui class.
-
-4. Data Persistence (Storage)
-
-Add a new module: add n/MA1508E y/YEAR1 s/SEM2.
-
-Exit the app using exit.
-
-Re-open the app.
-
-Expected Result: The module MA1508E should still be present in the list.
+**Expected Result:**
+The module `MA1508E` should be successfully reloaded and present in the list output, confirming that the `Storage` class correctly wrote the data to `ModTrack.txt` and read it back upon startup.
