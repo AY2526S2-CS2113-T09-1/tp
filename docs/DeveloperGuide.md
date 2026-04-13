@@ -120,7 +120,7 @@ The following sequence diagram shows how the `Ui` component interacts with other
 The Command mechanism is facilitated by the abstract `Command` class. It serves as the base for all executable actions within **ModTrack**, allowing the `Parser` to delegate logic to specific command objects.
 
 Class Diagram:
-![img_10.png](CommandClassDiagram.png)
+![img_10.png](  CommandClassDiagram.png)
 
 The abstract `Command` class defines a core method: `execute(ArrayList<Mod> list)`. Concrete subclasses implement this method to perform specific operations on the module list.
 
@@ -328,7 +328,7 @@ To mitigate the risk of accidental data loss, the `ClearCommand` implements a **
 This command serves as a hard reset for the application state. After a successful `clear`, features like `list c/` (Graduation Comparison) will report all requirements as "Missing" until the `ReferenceList` is re-populated via new `add` commands.
 
 The following sequence diagram shows how a clear operation goes through the system:
-![img_4.png](ClearCommandDiagram.png)
+![img_4.png](ClearCommandDiagramNew.png)
 
 #### 4. List Feature
 
@@ -389,12 +389,12 @@ The list features reflect the effects of commands such as `add`, `delete`, `mark
 
 #### Sequence Diagram
 `List` command Sequence Diagram
-![img_10.png](ListCommand.png)
+![img.png](ListSequenceDiagram.png)
 
 `List c/` command Sequence Diagram 
-![img_10.png](ListCompareCommand.png)
+![img.png](ListCompareSequenceDiagram.png)
 
-#### 4. Find Feature
+#### 5. Find Feature
 
 The FindCommand allows users to search for modules within their tracked list using a keyword. 
 The search is case-insensitive and matches any module whose name contains the provided keyword.
@@ -412,9 +412,9 @@ is displayed to the user.
 * Reason for skipping: Given that the module list is less than 100 modules for the CEG curriculum, using a hash map 
 serves no considerable benefit and would needlessly complicate the code hence more prone to implementation bugs.
 #### Sequence Diagram
-![img_10.png](Find.png)
+![img_4.png](FindCommandDiagram.png)
 
-#### 5. Exempt Feature
+#### 6 Exempt Feature
 The ExemptCommand allows users to mark a specific module as Exempted. This is typically used for modules where the 
 student has received a waiver or credit transfer, meaning the module is considered "cleared" without a traditional 
 grade or progress tracking.
@@ -432,9 +432,9 @@ If the loop completes without finding a match, the command provides feedback to 
 * This ensures that when a module is exempted, all related data (like completion status or modular credits) is updated 
 consistently in one place, preventing "divergent change" bugs where the command forgets to update a specific flag.
 #### Sequence Diagram
-![img_10.png](Exempt.png)
+![img.png](ExemptCommandDiagramNew.png)
 
-#### 5. Mark Feature
+#### 7. Mark Feature
 
 The **`MarkCommand`** allows the user to mark a tracked module as completed by specifying its module code.
 
@@ -499,7 +499,7 @@ The mark feature directly affects `list c/`, because completed modules count tow
 The current implementation was chosen because module codes such as `CS2113` are already unique and meaningful to the user, making command usage more natural in a CLI-based academic tracker.
 
 ##### Sequence Diagram
-![img_13.png](img_13.png)
+![img.png](MarkCommandSequenceDiagram.png)
 
 The sequence diagram above shows how the `mark` command is handled:
 1. The user enters the `mark` command
@@ -510,7 +510,7 @@ The sequence diagram above shows how the `mark` command is handled:
 
 ---
 
-#### 6. Unmark Feature
+#### 8. Unmark Feature
 
 The **`UnmarkCommand`** allows the user to reverse a previously completed module and set it back to incomplete.
 
@@ -574,7 +574,7 @@ The unmark feature directly affects `list c/` by removing the module from the se
 The current implementation was chosen to keep user interactions simple and explicit. Since the application is intended for fast CLI usage, direct commands such as `mark` and `unmark` are easier for users to remember and use.
 
 ##### Sequence Diagram
-![img_14.png](img_14.png)
+![img.png](UnmarkCommandSequenceDiagram.png)
 
 The sequence diagram above shows how the `unmark` command is handled:
 1. The user enters the `unmark` command
@@ -583,19 +583,7 @@ The sequence diagram above shows how the `unmark` command is handled:
 4. If a matching module is found, its completion status is reset
 5. The updated list is saved through the `Storage` component
 
-##### UML Class Diagram
-
-![img_9.png](img_9.png)
-
-The class diagram above illustrates the command-based architecture used in ModTrack. `ModTrack` acts as the central controller of the application and coordinates interactions between the `Parser`, `Storage`, and the module list. The `Parser` is responsible for converting raw user input into a concrete subclass of the abstract `Command` class.
-
-The `Command` abstraction allows different user actions to be encapsulated into separate classes such as `MarkCommand`, `UnmarkCommand`, `ExitCommand`, and `ShowGradReqCommand`. This design promotes modularity by ensuring that each command handles only one responsibility.
-
-Besides `mark` and `unmark`, the application also supports other core command interactions such as `exit` and `show grad req`. These commands follow the same command-based design architecture, where the `Parser` maps user input into a specific subclass of `Command`, and the `ModTrack` main loop executes the corresponding action.
-
-This design allows the application to remain modular and scalable, as future commands can be introduced with minimal changes to the overall control flow.
-
-#### 7. Exit Feature
+#### 9. Exit Feature
 
 The exit mechanism is facilitated by the `ExitCommand` class, which supports both `exit` and `bye` as trigger keywords.
 
@@ -613,7 +601,7 @@ exit
 bye
 ```
 ##### Sequence Diagram
-![img_4.png](ExitCommandDiagram.png)
+![img.png](ExitSequenceDiagarm.png)
 
 The sequence diagram above illustrates the termination flow:
 1. The user enters either the `exit` or `bye` command.
@@ -623,7 +611,7 @@ The sequence diagram above illustrates the termination flow:
 5. `ModTrack` triggers the final `Storage#save()` call.
 6. The `UI` displays a farewell message, and the loop terminates.
 
-#### 8. Show Graduation Requirement Feature
+#### 10. Show Graduation Requirement Feature
 This feature displays the graduation requirements tracked by the system.
 
 **How it works:**
@@ -664,8 +652,8 @@ The displayed graduation requirement logic is tied to the predefined requirement
 This feature depends heavily on `add`, `delete`, `mark`, `unmark`, and `transfer`, because all of those commands affect whether a module appears as fulfilled or outstanding in the requirement view.
 
 #### Sequence Diagram
+![img.png](ShowGradReqSequenceDiagram.png)
 
-![ShowGradReqDiagram.png](graduation requirement diagram.png)
 The sequence diagram illustrates how graduation requirements are displayed:
 1. The user enters the show grad req command.
 2. The Parser creates a ShowGradReqCommand.
@@ -673,26 +661,7 @@ The sequence diagram illustrates how graduation requirements are displayed:
 4. The UI retrieves and displays the graduation requirements to the user.
 5. The task list is not modified, and the main application continues its normal save flow.
 
-## Product scope
-### Target user profile
-
-The target user for **ModTrack** is a **National University of Singapore (NUS) Computer Engineering student** who:
-* prefers a **Command Line Interface (CLI)** over a Graphical User Interface (GUI) for speed and efficiency.
-* manages a complex curriculum involving both School of Computing and Faculty of Engineering requirements.
-* needs to track technical electives, core modules, and breadth requirements across multiple semesters.
-* is comfortable with terminal-based workflows and seeks a lightweight tool for academic planning.
-
-### Value proposition
-
-**ModTrack** solves the problem of navigating the complex graduation requirements of the Computer Engineering degree. While official university portals are useful for formal registration, they can be cumbersome for quick "what-if" planning or tracking progress toward a degree.
-
-This application provides:
-* **Requirement Tracking:** A centralized view to see which specific graduation requirements (e.g., General Education, Core Modules, and Electives) have been fulfilled and which are still outstanding.
-* **Academic Logging:** A historical record of modules completed, including year, semester, and credit details.
-* **Efficiency:** Rapid data entry and retrieval using short, optimized commands specifically designed for busy engineering students.
-* **Clarity:** Instant feedback on current progress, helping students ensure they are on track to graduate by their target date without needing to manually cross-reference various PDFs or websites.
-
-#### 9. Add Prerequisite Feature
+#### 11. Add Prerequisite Feature
 
 The **`AddPrereqCommand`** allows the user to add one or more prerequisite modules to an existing tracked module.
 
@@ -751,9 +720,9 @@ The current implementation stores prerequisites as strings and does not verify w
 The `addprereq` feature complements `showprereq` by supplying the prerequisite data later displayed to the user. It also interacts conceptually with `mark` and `transfer`, because prerequisite information may influence a user's decision to complete or transfer a module even though the current implementation does not enforce eligibility checks.
 
 ##### Sequence Diagram
-![img_12.png](img_12.png)
+![img.png](AddPreReqSequenceDiagram.png)
 
-#### 10. Show Prerequisite Feature
+#### 12. Show Prerequisite Feature
 
 The **`ShowPrereqCommand`** allows the user to view all prerequisites of a specified module.
 
@@ -816,9 +785,9 @@ The current implementation only displays direct prerequisites and does not recur
 This feature depends directly on `addprereq`, since prerequisite data must first be stored before it can be displayed. It also supports user decisions around `mark`, `transfer`, and semester planning by making dependency information visible.
 
 ##### Sequence Diagram
-![img_11.png](img_11.png)
+![img.png](ShowPreReqSequenceDiagram.png)
 
-#### 11. Transfer Feature
+#### 13. Transfer Feature
 
 The **`TransferCommand`** allows the user to mark a module as transferred, treating it as completed.
 
@@ -883,7 +852,27 @@ The current implementation treats transferred modules as completed, but does not
 The transfer feature directly affects `list c/` and graduation requirement display, because transferred modules count as completed. It also interacts with prerequisite-related planning, because a transferred prerequisite module may satisfy a dependency even though it was not completed locally.
 
 ##### Sequence Diagram
-![img_10.png](img_10.png)
+![img.png](TransferSequenceDiagram.png)
+
+## Product scope
+### Target user profile
+
+The target user for **ModTrack** is a **National University of Singapore (NUS) Computer Engineering student** who:
+* prefers a **Command Line Interface (CLI)** over a Graphical User Interface (GUI) for speed and efficiency.
+* manages a complex curriculum involving both School of Computing and Faculty of Engineering requirements.
+* needs to track technical electives, core modules, and breadth requirements across multiple semesters.
+* is comfortable with terminal-based workflows and seeks a lightweight tool for academic planning.
+
+### Value proposition
+
+**ModTrack** solves the problem of navigating the complex graduation requirements of the Computer Engineering degree. While official university portals are useful for formal registration, they can be cumbersome for quick "what-if" planning or tracking progress toward a degree.
+
+This application provides:
+* **Requirement Tracking:** A centralized view to see which specific graduation requirements (e.g., General Education, Core Modules, and Electives) have been fulfilled and which are still outstanding.
+* **Academic Logging:** A historical record of modules completed, including year, semester, and credit details.
+* **Efficiency:** Rapid data entry and retrieval using short, optimized commands specifically designed for busy engineering students.
+* **Clarity:** Instant feedback on current progress, helping students ensure they are on track to graduate by their target date without needing to manually cross-reference various PDFs or websites.
+
 
 ## User Stories
 
